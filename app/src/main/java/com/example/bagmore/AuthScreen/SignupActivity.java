@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,12 +27,12 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class Signup2Activity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST_CODE = 10;
     //region init
-    @BindView(R.id.tv_let_go)
-    TextView tvLetgo;
+    @BindView(R.id.btn_sign_up)
+    Button btnSignup;
 
     @BindView(R.id.btn_gender_man)
     Button btnGenderMan;
@@ -47,6 +46,14 @@ public class Signup2Activity extends AppCompatActivity {
     @BindView(R.id.edt_lname_signup)
     EditText edtLname;
 
+    @BindView(R.id.edt_email_signup)
+    EditText edtEmail;
+
+    @BindView(R.id.edt_password_signup)
+    EditText edtPassword;
+
+    @BindView(R.id.edt_password_cf_signup)
+    EditText edtConfirmPassword;
     @BindView(R.id.edt_birthday_signup)
     EditText edtBirthday;
 
@@ -68,7 +75,7 @@ public class Signup2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup2);
+        setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
 
         initToolbar();
@@ -107,13 +114,13 @@ public class Signup2Activity extends AppCompatActivity {
             }
         });
 
-        tvLetgo.setOnClickListener(new View.OnClickListener() {
+        btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean check = validation();
                 if (check) {
-                    Toast.makeText(Signup2Activity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Signup2Activity.this, HomeActivity.class);
+                    Toast.makeText(SignupActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
                     // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     // finish();
@@ -130,7 +137,7 @@ public class Signup2Activity extends AppCompatActivity {
                 btnGenderWoman.setBackgroundColor(getResources().getColor(R.color.white));
                 btnGenderWoman.setTextColor(getResources().getColor(R.color.black));
                 gender = 0;
-                Toast.makeText(Signup2Activity.this, "Selected gender man: " + gender, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, "Selected gender man: " + gender, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -142,7 +149,7 @@ public class Signup2Activity extends AppCompatActivity {
                 btnGenderMan.setBackgroundColor(getResources().getColor(R.color.white));
                 btnGenderMan.setTextColor(getResources().getColor(R.color.black));
                 gender = 1;
-                Toast.makeText(Signup2Activity.this, "Selected gender women: " + gender, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, "Selected gender women: " + gender, Toast.LENGTH_SHORT).show();
             }
         });
 

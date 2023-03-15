@@ -61,7 +61,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".AuthScreen.Signup2Activity"
+            android:name=".AuthScreen.SignupActivity"
             android:exported="false" >
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
@@ -84,9 +84,6 @@
         </activity>
         <activity
             android:name=".AuthScreen.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AuthScreen.Signup1Activity"
             android:exported="false" />
         <activity
             android:name=".DetailActivity"

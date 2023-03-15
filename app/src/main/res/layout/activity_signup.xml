@@ -15,31 +15,23 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="40dp"
         android:src="@drawable/avt_john_wick" />
 
-    <TextView
-        android:id="@+id/txt_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/img_avt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="John Wick"
-        android:textColor="@color/black"
-        android:textSize="25dp" />
+
 
     <LinearLayout
+        android:layout_margin="10dp"
         android:id="@+id/ln_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_name"
+        android:layout_below="@id/img_avt"
         android:layout_centerHorizontal="true">
 
         <Button
             android:id="@+id/btn_gender_man"
             android:layout_width="180dp"
-            android:layout_height="65dp"
+            android:layout_height="50dp"
             android:layout_marginRight="15dp"
             android:backgroundTint="@color/black"
             android:drawableLeft="@drawable/man_symbol"
@@ -50,7 +42,7 @@
         <Button
             android:id="@+id/btn_gender_woman"
             android:layout_width="180dp"
-            android:layout_height="65dp"
+            android:layout_height="50dp"
             android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/women_symbol"
             android:text="Women's"
@@ -78,7 +70,6 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="35dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -126,6 +117,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="45dp"
+                    android:text="Email"
+                    android:textColor="@color/grey"
+                    android:textSize="17dp" />
+
+                <EditText
+                    android:id="@+id/edt_email_signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:background="@drawable/under_line_edit_text"
+                    android:clickable="false"
+                    android:inputType="text"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="45dp"
+                    android:text="Password"
+                    android:textColor="@color/grey"
+                    android:textSize="17dp" />
+
+                <EditText
+                    android:id="@+id/edt_password_signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:background="@drawable/under_line_edit_text"
+                    android:clickable="false"
+                    android:inputType="text"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="45dp"
+                    android:text="Confirm password"
+                    android:textColor="@color/grey"
+                    android:textSize="17dp" />
+
+                <EditText
+                    android:id="@+id/edt_password_cf_signup"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:background="@drawable/under_line_edit_text"
+                    android:clickable="false"
+                    android:inputType="text"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -197,17 +239,15 @@
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey" />
 
-                <TextView
-                    android:id="@+id/tv_let_go"
+                <Button
+                    android:id="@+id/btn_sign_up"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_below="@id/scr_view"
+                    android:layout_height="75dp"
                     android:layout_marginTop="50dp"
-                    android:background="@color/grey1"
-                    android:gravity="center"
-                    android:text="LET'S GO"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:backgroundTint="@color/transparent"
+                    android:drawableRight="@drawable/next"
+                    android:text="SIGN UP"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
 
