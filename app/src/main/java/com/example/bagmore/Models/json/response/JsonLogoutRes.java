@@ -14,6 +14,9 @@ public class JsonLogoutRes {
         this.message = message;
     }
 
+    public JsonLogoutRes() {
+    }
+
     public String getSuccess() {
         return success;
     }

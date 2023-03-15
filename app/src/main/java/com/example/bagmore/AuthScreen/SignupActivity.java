@@ -2,10 +2,10 @@ package com.example.bagmore.AuthScreen;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,17 +20,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.example.bagmore.HandlerException.Dialog;
+import com.example.bagmore.Helpers.RealPathUtil;
 import com.example.bagmore.Models.json.response.JsonLogoutRes;
 import com.example.bagmore.R;
 import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.Services.UserService;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -82,7 +83,8 @@ public class SignupActivity extends AppCompatActivity {
 
     private UserService userService;
 
-    private byte[] imageAvt;
+    private Uri mUri;
+    private File imageAvt;
     //endregion
 
     @Override
@@ -125,6 +127,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 imagePicker();
+
             }
         });
 
@@ -179,13 +182,12 @@ public class SignupActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
-                        edtBirthday.setText(selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay);
-                    }
-                }, year, month, day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                edtBirthday.setText(selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay);
+            }
+        }, year, month, day);
 
         datePickerDialog.show();
     }
@@ -202,17 +204,8 @@ public class SignupActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Get the image URI
-
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            imageAvt = outputStream.toByteArray();
-
-            Uri imageUri = data.getData();
-            // Use Glide to load the image into an ImageView
-            Glide.with(this).load(imageUri).into(imgAvatar);
-
+            mUri = data.getData();
+            Glide.with(this).load(mUri).into(imgAvatar);
         }
     }
 
@@ -271,8 +264,42 @@ public class SignupActivity extends AppCompatActivity {
 
     //region Call Signup API
     private void signupAPI() {
-        RequestBody requestBody = fillBody();
-        Call<JsonLogoutRes> result = userService.userRegister(requestBody);
+
+        String strEmail = edtEmail.getText().toString().trim();
+        String strPassword = edtPassword.getText().toString().trim();
+        String strFname = edtFname.getText().toString().trim();
+        String strLname = edtLname.getText().toString().trim();
+        String strBirthday = edtBirthday.getText().toString().trim();
+        String strPhone = edtPhone.getText().toString().trim();
+        String strAddress1 = edtAddress1.getText().toString().trim();
+        String strAddress2 = edtAddress2.getText().toString().trim();
+
+        RequestBody requestBodyEmail = RequestBody.create(MediaType.parse("multipart/form-data"), strEmail);
+        RequestBody requestBodyGender = RequestBody.create(MediaType.parse("multipart/form-data"), gender);
+        RequestBody requestBodyPassword = RequestBody.create(MediaType.parse("multipart/form-data"), strPassword);
+        RequestBody requestBodyFname = RequestBody.create(MediaType.parse("multipart/form-data"), strFname);
+        RequestBody requestBodyLname = RequestBody.create(MediaType.parse("multipart/form-data"), strLname);
+        RequestBody requestBodyBirthday = RequestBody.create(MediaType.parse("multipart/form-data"), strBirthday);
+        RequestBody requestBodyPhone = RequestBody.create(MediaType.parse("multipart/form-data"), strPhone);
+        RequestBody requestBodyAddress1 = RequestBody.create(MediaType.parse("multipart/form-data"), strAddress1);
+        RequestBody requestBodyAddress2 = RequestBody.create(MediaType.parse("multipart/form-data"), strAddress2);
+
+        String strRealPath = RealPathUtil.getRealPath(this, mUri);
+        Log.e("BagMore", strRealPath);
+        imageAvt = new File(strRealPath);
+        RequestBody requestBodyAvt = RequestBody.create(MediaType.parse("multipart/form-data"), imageAvt);
+        MultipartBody.Part multipartBodyAvt = MultipartBody.Part.createFormData("avt", imageAvt.getName(), requestBodyAvt);
+
+        Call<JsonLogoutRes> result = userService.userRegister(multipartBodyAvt,
+                requestBodyEmail,
+                requestBodyPassword,
+                requestBodyGender,
+                requestBodyFname,
+                requestBodyLname,
+                requestBodyBirthday,
+                requestBodyPhone,
+                requestBodyAddress1,
+                requestBodyAddress2);
         result.enqueue(new Callback<JsonLogoutRes>() {
             @Override
             public void onResponse(Call<JsonLogoutRes> call, Response<JsonLogoutRes> response) {
@@ -281,13 +308,13 @@ public class SignupActivity extends AppCompatActivity {
                     navigation();
 
                 } else {
-                    Dialog.showDialog(SignupActivity.this, "Signup execution", "Sign up failed!");
+                    Toast.makeText(SignupActivity.this, response.body() + "", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<JsonLogoutRes> call, Throwable t) {
-                Toast.makeText(SignupActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -299,14 +326,13 @@ public class SignupActivity extends AppCompatActivity {
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("Email", edtEmail.getText().toString().trim())
                 .addFormDataPart("Password", edtPassword.getText().toString().trim())
-                .addFormDataPart("Gender", gender.trim())
+                .addFormDataPart("Gender", gender)
                 .addFormDataPart("FirstName", edtFname.getText().toString().trim())
                 .addFormDataPart("LastName", edtLname.getText().toString().trim())
                 .addFormDataPart("BirthDay", edtBirthday.getText().toString().trim())
                 .addFormDataPart("Phone", edtPhone.getText().toString().trim())
                 .addFormDataPart("FirstAddress", edtAddress1.getText().toString().trim())
                 .addFormDataPart("SecondAddress", edtAddress2.getText().toString().trim())
-                .addFormDataPart("Image", imageAvt.toString())
                 .build();
 
         return requestBody;

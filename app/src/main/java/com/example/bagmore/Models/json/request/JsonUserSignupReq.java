@@ -2,32 +2,31 @@ package com.example.bagmore.Models.json.request;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 public class JsonUserSignupReq {
 
-    @SerializedName("Email")
+    @SerializedName("email")
     private String email;
-    @SerializedName("Password")
+    @SerializedName("password")
     private String password;
-    @SerializedName("Gender")
+    @SerializedName("gender")
     private boolean gender;
-    @SerializedName("FirstName")
+    @SerializedName("firstName")
     private String firstName;
-    @SerializedName("LastName")
+    @SerializedName("lastName")
     private String lastName;
-    @SerializedName("BirthDay")
-    private Date birthDay;
-    @SerializedName("Phone")
+    @SerializedName("birthDay")
+    private String birthDay;
+    @SerializedName("phone")
     private String phone;
-    @SerializedName("FirstAddress")
+    @SerializedName("firstAddress")
     private String firstAddress;
-    @SerializedName("SecondAddress")
+    @SerializedName("secondAddress")
     private String secondAddress;
-    @SerializedName("Image")
+
+    @SerializedName("image")
     private byte[] image;
 
-    public JsonUserSignupReq(String email, String password, boolean gender, String firstName, String lastName, Date birthDay, String phone, String firstAddress, String secondAddress, byte[] image) {
+    public JsonUserSignupReq(String email, String password, boolean gender, String firstName, String lastName, String birthDay, String phone, String firstAddress, String secondAddress, byte[] image) {
         this.email = email;
         this.password = password;
         this.gender = gender;
@@ -80,11 +79,11 @@ public class JsonUserSignupReq {
         this.lastName = lastName;
     }
 
-    public Date getBirthDay() {
+    public String getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(Date birthDay) {
+    public void setBirthDay(String birthDay) {
         this.birthDay = birthDay;
     }
 

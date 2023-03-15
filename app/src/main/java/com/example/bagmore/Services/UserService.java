@@ -7,19 +7,34 @@ import com.example.bagmore.Models.json.response.JsonLoginRes;
 import com.example.bagmore.Models.json.response.JsonLogoutRes;
 import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface UserService {
 
     @POST("authentication/user-login")
     Call<JsonLoginRes> userLogin(@Body JsonUserLoginReq user);
 
+
+    @Multipart
     @POST("authentication/register")
-    Call<JsonLogoutRes> userRegister(@Body RequestBody requestBody);
+    Call<JsonLogoutRes> userRegister(@Part MultipartBody.Part image,
+                                     @Part("Email") RequestBody email,
+                                     @Part("Password") RequestBody password,
+                                     @Part("Gender") RequestBody gender,
+                                     @Part("FirstName") RequestBody firstName,
+                                     @Part("LastName") RequestBody lastName,
+                                     @Part("BirthDay") RequestBody birthDay,
+                                     @Part("Phone") RequestBody phone,
+                                     @Part("FirstAddress") RequestBody firstAddress,
+                                     @Part("SecondAddress") RequestBody secondAddress
+    );
 
     @POST("authentication/logout")
     Call<JsonLogoutRes> userLogout(@Header(ApiClient.AUTH_HEADER) String accessToken);
