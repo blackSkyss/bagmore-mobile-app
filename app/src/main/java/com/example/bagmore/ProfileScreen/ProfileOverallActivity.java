@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.bagmore.AuthScreen.LoginActivity;
 import com.example.bagmore.DeliveryActivity;
-import com.example.bagmore.HandlerException.Dialog;
 import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.TokenRefreshViewModel;
 import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
@@ -180,12 +179,8 @@ public class ProfileOverallActivity extends AppCompatActivity {
             result.enqueue(new Callback<JsonLogoutRes>() {
                 @Override
                 public void onResponse(Call<JsonLogoutRes> call, Response<JsonLogoutRes> response) {
-                    if (response.isSuccessful()) {
-                        tokenManager.clearToken();
-                        navigation();
-                    } else {
-                        Dialog.showDialog(ProfileOverallActivity.this, "Logout execution", "Logout failed");
-                    }
+                    tokenManager.clearToken();
+                    navigation();
                 }
 
                 @Override

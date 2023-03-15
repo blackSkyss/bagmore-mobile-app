@@ -19,13 +19,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.example.bagmore.HomeActivity;
+import com.example.bagmore.HandlerException.Dialog;
+import com.example.bagmore.Models.json.response.JsonLogoutRes;
 import com.example.bagmore.R;
+import com.example.bagmore.Repository.UserRepository;
+import com.example.bagmore.Services.UserService;
 
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -68,8 +76,9 @@ public class SignupActivity extends AppCompatActivity {
 
     @BindView(R.id.img_avt)
     ImageView imgAvatar;
+    private String gender = "true";
 
-    private int gender = 0;
+    private UserService userService;
     //endregion
 
     @Override
@@ -80,6 +89,7 @@ public class SignupActivity extends AppCompatActivity {
 
         initToolbar();
         onClickHandler();
+        userService = UserRepository.getUserService();
     }
 
     //region init toolbar
@@ -119,11 +129,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 boolean check = validation();
                 if (check) {
-                    Toast.makeText(SignupActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
-                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    // finish();
+                    signupAPI();
                 }
                 return;
             }
@@ -136,7 +142,7 @@ public class SignupActivity extends AppCompatActivity {
                 btnGenderMan.setTextColor(getResources().getColor(R.color.white));
                 btnGenderWoman.setBackgroundColor(getResources().getColor(R.color.white));
                 btnGenderWoman.setTextColor(getResources().getColor(R.color.black));
-                gender = 0;
+                gender = "true";
                 Toast.makeText(SignupActivity.this, "Selected gender man: " + gender, Toast.LENGTH_SHORT).show();
             }
         });
@@ -148,7 +154,7 @@ public class SignupActivity extends AppCompatActivity {
                 btnGenderWoman.setTextColor(getResources().getColor(R.color.white));
                 btnGenderMan.setBackgroundColor(getResources().getColor(R.color.white));
                 btnGenderMan.setTextColor(getResources().getColor(R.color.black));
-                gender = 1;
+                gender = "false";
                 Toast.makeText(SignupActivity.this, "Selected gender women: " + gender, Toast.LENGTH_SHORT).show();
             }
         });
@@ -233,6 +239,59 @@ public class SignupActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+    //endregion
+
+    //region Call Signup API
+    private void signupAPI() {
+        RequestBody requestBody = fillBody();
+        Call<JsonLogoutRes> result = userService.userRegister(requestBody);
+        result.enqueue(new Callback<JsonLogoutRes>() {
+            @Override
+            public void onResponse(Call<JsonLogoutRes> call, Response<JsonLogoutRes> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(SignupActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
+                    navigation();
+
+                } else {
+                    Dialog.showDialog(SignupActivity.this, "Signup execution", "Sign up failed!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonLogoutRes> call, Throwable t) {
+                Toast.makeText(SignupActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    //endregion
+
+    //region Request body
+    private RequestBody fillBody() {
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("Email", edtEmail.getText().toString().trim())
+                .addFormDataPart("Password", edtPassword.getText().toString().trim())
+                .addFormDataPart("Gender", gender.trim())
+                .addFormDataPart("FirstName", edtFname.getText().toString().trim())
+                .addFormDataPart("LastName", edtLname.getText().toString().trim())
+                .addFormDataPart("BirthDay", edtBirthday.getText().toString().trim())
+                .addFormDataPart("Phone", edtPhone.getText().toString().trim())
+                .addFormDataPart("FirstAddress", edtAddress1.getText().toString().trim())
+                .addFormDataPart("SecondAddress", edtAddress2.getText().toString().trim())
+                .addFormDataPart("Image", edtEmail.getText().toString().trim())
+                .build();
+
+        return requestBody;
+    }
+    //endregion
+
+    //region navigation
+    private void navigation() {
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     //endregion
 }

@@ -19,7 +19,7 @@ public interface UserService {
     Call<JsonLoginRes> userLogin(@Body JsonUserLoginReq user);
 
     @POST("authentication/register")
-    Call<JsonLoginRes> userRegister(@Body RequestBody requestBody);
+    Call<JsonLogoutRes> userRegister(@Body RequestBody requestBody);
 
     @POST("authentication/logout")
     Call<JsonLogoutRes> userLogout(@Header(ApiClient.AUTH_HEADER) String accessToken);
