@@ -2,6 +2,7 @@ package com.example.bagmore.AuthScreen;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,6 +26,7 @@ import com.example.bagmore.R;
 import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.Services.UserService;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -79,6 +81,8 @@ public class SignupActivity extends AppCompatActivity {
     private String gender = "true";
 
     private UserService userService;
+
+    private byte[] imageAvt;
     //endregion
 
     @Override
@@ -198,10 +202,17 @@ public class SignupActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Get the image URI
-            Uri imageUri = data.getData();
 
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            imageAvt = outputStream.toByteArray();
+
+            Uri imageUri = data.getData();
             // Use Glide to load the image into an ImageView
             Glide.with(this).load(imageUri).into(imgAvatar);
+
         }
     }
 
@@ -279,7 +290,7 @@ public class SignupActivity extends AppCompatActivity {
                 .addFormDataPart("Phone", edtPhone.getText().toString().trim())
                 .addFormDataPart("FirstAddress", edtAddress1.getText().toString().trim())
                 .addFormDataPart("SecondAddress", edtAddress2.getText().toString().trim())
-                .addFormDataPart("Image", edtEmail.getText().toString().trim())
+                .addFormDataPart("Image", imageAvt.toString())
                 .build();
 
         return requestBody;
@@ -289,7 +300,7 @@ public class SignupActivity extends AppCompatActivity {
     //region navigation
     private void navigation() {
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
