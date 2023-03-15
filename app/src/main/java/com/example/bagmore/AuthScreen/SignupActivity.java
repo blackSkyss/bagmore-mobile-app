@@ -229,6 +229,22 @@ public class SignupActivity extends AppCompatActivity {
             edtLname.setError("Last name is required!");
             checkFlag++;
         }
+
+        if (edtEmail.length() == 0) {
+            edtEmail.setError("Email is required!");
+            checkFlag++;
+        }
+
+        if (edtPassword.length() == 0) {
+            edtPassword.setError("Password is required!");
+            checkFlag++;
+        }
+
+        if (edtConfirmPassword.length() == 0) {
+            edtConfirmPassword.setError("Confirm password is required!");
+            checkFlag++;
+        }
+
         if (edtBirthday.length() == 0) {
             edtBirthday.setError("Birthday is required!");
             checkFlag++;
