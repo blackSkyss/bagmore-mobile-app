@@ -1,0 +1,69 @@
+package com.example.bagmore.Adapters.TabViewAdapters;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.example.bagmore.Fragments.MyBagFragment;
+import com.example.bagmore.Fragments.WishListFragment;
+import com.example.bagmore.Fragments.cart.CartNothingFragment;
+import com.example.bagmore.Fragments.cart.WishlistNothingFragment;
+import com.example.bagmore.Models.data.ItemCartViewModel;
+
+import java.util.List;
+
+public class CartTVAdapter extends FragmentStatePagerAdapter {
+
+    private List<ItemCartViewModel> itemCarts;
+    private List<ItemCartViewModel> itemWishlists;
+
+    public CartTVAdapter(@NonNull FragmentManager fm, int behavior, List<ItemCartViewModel> itemCarts, List<ItemCartViewModel> itemWishlists) {
+        super(fm, behavior);
+        this.itemCarts = itemCarts;
+        this.itemWishlists = itemWishlists;
+    }
+
+    // init fragment
+    @NonNull
+    @Override
+    public Fragment getItem(int position) {
+        switch (position) {
+            case 1:
+                if (itemWishlists != null) {
+                    return new WishListFragment(itemWishlists);
+                } else {
+                    return new WishlistNothingFragment();
+                }
+            default:
+                if (itemCarts != null) {
+                    return new MyBagFragment(itemCarts);
+                } else {
+                    return new CartNothingFragment();
+                }
+        }
+    }
+
+    // amount of fragment in tab view
+    @Override
+    public int getCount() {
+        return 2;
+    }
+
+    // set title for each tab
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        String title = "";
+        switch (position) {
+            case 0:
+                title = "My Bag";
+                break;
+            case 1:
+                title = "Wish List";
+                break;
+        }
+        return title;
+    }
+}
