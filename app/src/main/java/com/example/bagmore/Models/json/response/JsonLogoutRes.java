@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class JsonLogoutRes {
     @SerializedName("success")
-    private String success;
+    private boolean success;
 
     @SerializedName("message")
     private String message;
 
-    public JsonLogoutRes(String success, String message) {
+    public JsonLogoutRes(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
@@ -17,11 +17,11 @@ public class JsonLogoutRes {
     public JsonLogoutRes() {
     }
 
-    public String getSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 
-    public void setSuccess(String success) {
+    public void setSuccess(boolean success) {
         this.success = success;
     }
 
