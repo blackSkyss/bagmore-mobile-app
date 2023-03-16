@@ -23,14 +23,25 @@ import com.denzcoskun.imageslider.adapters.ViewPagerAdapter;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.bagmore.Adapters.TabViewAdapters.ProductHomeTVAdapter;
+import com.example.bagmore.Models.data.ProductDetailViewModel;
+import com.example.bagmore.Models.data.ProductViewModel;
+import com.example.bagmore.Models.json.request.JsonProductDetailReq;
+import com.example.bagmore.Models.json.response.JsonProductDetailRes;
+import com.example.bagmore.Models.json.response.JsonProductViewModel;
 import com.example.bagmore.OrderScreen.CartActivity;
+import com.example.bagmore.Repository.ProductRepository;
 import com.example.bagmore.SearchingScreen.SortActivity;
+import com.example.bagmore.Services.ProductService;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -39,6 +50,8 @@ public class DetailActivity extends AppCompatActivity {
     private ProductHomeTVAdapter mViewPagerAdapter;
     private MaterialButton btnCart;
     private Button btnAddToCart;
+    ProductService productService;
+    private int productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +90,33 @@ public class DetailActivity extends AppCompatActivity {
 
         // set click handler for button
         OnClickHandler();
-    }
+        productService = ProductRepository.getProductService();
+        getProductDetailById();
+        }
 
 
+        private ProductDetailViewModel getProductDetailById(){
+            final ProductDetailViewModel[] product = {new ProductDetailViewModel()};
+            Intent intent = getIntent();
+            productId = (int) intent.getSerializableExtra("product");
+            Call<JsonProductDetailRes> callGetProducts =  productService.getProductDetailById(productId);
+            callGetProducts.enqueue(new Callback<JsonProductDetailRes>() {
+                @Override
+                public void onResponse(Call<JsonProductDetailRes> call, Response<JsonProductDetailRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonProductDetailRes jsonModel = response.body();
+                        product[0] = jsonModel.getProductDetail();
+                        Toast.makeText(DetailActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<JsonProductDetailRes> call, Throwable t) {
+                    Toast.makeText(DetailActivity.this, "VKLKKKKK vcc", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return product[0];
+        }
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.tool_bar);
         TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);

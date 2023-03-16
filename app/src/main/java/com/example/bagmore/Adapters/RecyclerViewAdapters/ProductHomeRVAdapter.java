@@ -1,6 +1,9 @@
 package com.example.bagmore.Adapters.RecyclerViewAdapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +58,11 @@ public class ProductHomeRVAdapter extends RecyclerView.Adapter<ProductHomeRVAdap
             return;
         }
 
-        /* byte[] bytes = android.util.Base64.decode(products.get(position).getSource(), Base64.DEFAULT);
+        byte[] bytes = android.util.Base64.decode(products.get(position).getSource(), Base64.DEFAULT);
            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-           holder.image.setImageBitmap(bitmap); */
+           holder.image.setImageBitmap(bitmap);
 
-        holder.image.setImageResource(product.getSource());
+        // holder.image.setImageResource(product.getSource());
         String price = "$" + product.getMinPrice() + " - " + "$" + product.getMaxPrice();
         holder.title.setText(price);
         holder.description.setText(product.getDescription());
