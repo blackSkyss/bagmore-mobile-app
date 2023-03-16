@@ -1,12 +1,19 @@
 package com.example.bagmore.Models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class ProductDetailViewModel {
+    @SerializedName("Name")
     public String Name;
+    @SerializedName("Composition")
     public String Composition ;
+    @SerializedName("Description")
     public String Description ;
+    @SerializedName("ProductImages")
     public List<ProductImageViewModel> ProductImages ;
+    @SerializedName("DescribeProducts")
     public  List<DescribeProductsViewModel> DescribeProducts;
 
     public ProductDetailViewModel(String name, String composition, String description, List<ProductImageViewModel> productImages, List<DescribeProductsViewModel> describeProducts) {

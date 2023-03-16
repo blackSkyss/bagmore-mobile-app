@@ -1,6 +1,9 @@
 package com.example.bagmore.Models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SizeProductDetailViewModel {
+    @SerializedName("Name")
     public String Name;
 
     public SizeProductDetailViewModel(String name) {

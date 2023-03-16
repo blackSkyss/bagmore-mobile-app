@@ -7,15 +7,19 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class JsonProductDetailRes {
+
+    @SerializedName("data")
+    private ProductDetailViewModel data;
     @SerializedName("success")
     private boolean success;
 
-    @SerializedName("productDetail")
-    private ProductDetailViewModel productDetail;
 
-    public JsonProductDetailRes(boolean success, ProductDetailViewModel productDetail) {
-        this.success = success;
-        this.productDetail = productDetail;
+    public ProductDetailViewModel getData() {
+        return data;
+    }
+
+    public void setData(ProductDetailViewModel data) {
+        this.data = data;
     }
 
     public boolean isSuccess() {
@@ -26,11 +30,8 @@ public class JsonProductDetailRes {
         this.success = success;
     }
 
-    public ProductDetailViewModel getProductDetail() {
-        return productDetail;
-    }
-
-    public void setProductDetail(ProductDetailViewModel productDetail) {
-        this.productDetail = productDetail;
+    public JsonProductDetailRes(ProductDetailViewModel data, boolean success) {
+        this.data = data;
+        this.success = success;
     }
 }

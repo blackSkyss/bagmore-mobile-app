@@ -1,10 +1,15 @@
 package com.example.bagmore.Models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 
 public class DescribeProductsViewModel {
+    @SerializedName("Color")
     public ColorProductDetailViewModel Color;
+    @SerializedName("Size")
     public SizeProductDetailViewModel Size;
+    @SerializedName("Price")
     public BigDecimal Price;
 
     public DescribeProductsViewModel(ColorProductDetailViewModel color, SizeProductDetailViewModel size, BigDecimal price) {
