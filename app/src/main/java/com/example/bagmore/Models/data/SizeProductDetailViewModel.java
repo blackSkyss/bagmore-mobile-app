@@ -3,7 +3,7 @@ package com.example.bagmore.Models.data;
 import com.google.gson.annotations.SerializedName;
 
 public class SizeProductDetailViewModel {
-    @SerializedName("Name")
+    @SerializedName("name")
     public String Name;
 
     public SizeProductDetailViewModel(String name) {

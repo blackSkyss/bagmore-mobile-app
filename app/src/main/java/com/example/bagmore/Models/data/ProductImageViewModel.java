@@ -3,18 +3,18 @@ package com.example.bagmore.Models.data;
 import com.google.gson.annotations.SerializedName;
 
 public class ProductImageViewModel {
-    @SerializedName("Source")
-    public byte[] Source;
+    @SerializedName("source")
+    public String Source;
 
-    public ProductImageViewModel(byte[] source) {
+    public ProductImageViewModel(String source) {
         Source = source;
     }
 
-    public byte[] getSource() {
+    public String getSource() {
         return Source;
     }
 
-    public void setSource(byte[] source) {
+    public void setSource(String source) {
         Source = source;
     }
 }

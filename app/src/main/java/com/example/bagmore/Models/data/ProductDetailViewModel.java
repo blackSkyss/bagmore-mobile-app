@@ -5,18 +5,25 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class ProductDetailViewModel {
-    @SerializedName("Name")
+    @SerializedName("id")
+    public int id;
+    @SerializedName("name")
     public String Name;
-    @SerializedName("Composition")
-    public String Composition ;
-    @SerializedName("Description")
-    public String Description ;
-    @SerializedName("ProductImages")
-    public List<ProductImageViewModel> ProductImages ;
-    @SerializedName("DescribeProducts")
-    public  List<DescribeProductsViewModel> DescribeProducts;
+    @SerializedName("composition")
+    public String Composition;
+    @SerializedName("description")
+    public String Description;
+    @SerializedName("productImages")
+    public List<ProductImageViewModel> ProductImages;
+    @SerializedName("describeProducts")
+    public List<DescribeProductsViewModel> DescribeProducts;
 
-    public ProductDetailViewModel(String name, String composition, String description, List<ProductImageViewModel> productImages, List<DescribeProductsViewModel> describeProducts) {
+    public ProductDetailViewModel() {
+
+    }
+
+    public ProductDetailViewModel(int id, String name, String composition, String description, List<ProductImageViewModel> productImages, List<DescribeProductsViewModel> describeProducts) {
+        this.id = id;
         Name = name;
         Composition = composition;
         Description = description;
@@ -24,8 +31,12 @@ public class ProductDetailViewModel {
         DescribeProducts = describeProducts;
     }
 
-    public ProductDetailViewModel() {
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.fragment.app.Fragment;
 
+import com.example.bagmore.Models.data.ProductDetailViewModel;
 import com.example.bagmore.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -28,18 +29,19 @@ public class InformationFragment extends Fragment {
     MaterialButton btnMinus, btnPlus;
     EditText edtQuantity;
 
-    TextView textViewInfor;
+    TextView tvName, tvDescription;
+    ProductDetailViewModel product;
     //endregion
 
     private int quantity = 1;
 
-    public InformationFragment() {
+    public InformationFragment(ProductDetailViewModel product) {
+        this.product = product;
 
     }
 
-
-    public static InformationFragment newInstance(String param1, String param2) {
-        InformationFragment fragment = new InformationFragment();
+    public static InformationFragment newInstance(String param1, String param2, ProductDetailViewModel product) {
+        InformationFragment fragment = new InformationFragment(product);
         return fragment;
     }
 
@@ -60,7 +62,10 @@ public class InformationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         //region mapping UI
+        tvName = view.findViewById(R.id.tv_title_product);
+        tvDescription = view.findViewById(R.id.tv_description_product);
         rbS = view.findViewById(R.id.rb_S);
         rbM = view.findViewById(R.id.rb_M);
         rbL = view.findViewById(R.id.rb_L);
@@ -75,6 +80,9 @@ public class InformationFragment extends Fragment {
         btnMinus = view.findViewById(R.id.btn_minus);
         btnPlus = view.findViewById(R.id.btn_plus);
         edtQuantity = view.findViewById(R.id.edt_quantity);
+
+        tvName.setText(product.getName());
+        tvDescription.setText(product.getDescription());
         //endregion
 
         //region handler size

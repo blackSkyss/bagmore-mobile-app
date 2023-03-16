@@ -28,9 +28,10 @@
             </TextView>
 
             <TextView
-                android:fontFamily="@font/dmsans_regular"
+                android:id="@+id/tv_composition_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/dmsans_regular"
                 android:padding="18dp"
                 android:text="LEATHER: Clean with a clean, dry cloth. You can rub colourless or colour-matched waxes into the leather in a circular motion."
                 android:textColor="@color/grey"

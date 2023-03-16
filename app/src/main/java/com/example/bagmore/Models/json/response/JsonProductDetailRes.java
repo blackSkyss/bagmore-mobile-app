@@ -1,14 +1,11 @@
 package com.example.bagmore.Models.json.response;
 
 import com.example.bagmore.Models.data.ProductDetailViewModel;
-import com.example.bagmore.Models.data.SizeViewModel;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class JsonProductDetailRes {
 
-    @SerializedName("data")
+    @SerializedName("productDetail")
     private ProductDetailViewModel data;
     @SerializedName("success")
     private boolean success;

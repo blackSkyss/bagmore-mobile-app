@@ -8,12 +8,16 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.bagmore.Fragments.CompositionFragment;
 import com.example.bagmore.Fragments.InformationFragment;
+import com.example.bagmore.Models.data.ProductDetailViewModel;
 
 public class ProductHomeTVAdapter extends FragmentStatePagerAdapter {
+    private ProductDetailViewModel product;
 
-    public ProductHomeTVAdapter(@NonNull FragmentManager fm, int behavior) {
+    public ProductHomeTVAdapter(@NonNull FragmentManager fm, int behavior, ProductDetailViewModel product) {
         super(fm, behavior);
+        this.product = product;
     }
+
 
     // init fragment
     @NonNull
@@ -21,10 +25,10 @@ public class ProductHomeTVAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 1:
-                return new CompositionFragment();
+                return new CompositionFragment(product);
 
             default:
-                return new InformationFragment();
+                return new InformationFragment(product);
         }
 
     }
@@ -50,4 +54,6 @@ public class ProductHomeTVAdapter extends FragmentStatePagerAdapter {
         }
         return title;
     }
+
+
 }

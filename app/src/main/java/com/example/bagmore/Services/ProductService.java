@@ -14,5 +14,5 @@ public interface ProductService {
     Call<JsonProductViewModel> getProducts(@Header(ApiClient.AUTH_HEADER) String accessToken);
 
     @GET("user/Product/Get/{productId}")
-    Call<JsonProductDetailRes> getProductDetailById(@Path("productId") int id);
+    Call<JsonProductDetailRes> getProductDetailById(@Header(ApiClient.AUTH_HEADER) String accessToken, @Path("productId") int id);
 }

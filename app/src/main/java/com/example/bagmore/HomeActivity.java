@@ -94,7 +94,6 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 @Override
                 public void onFailure(Call<JsonProductViewModel> call, Throwable t) {
                     Toast.makeText(HomeActivity.this, "Failed to all API", Toast.LENGTH_SHORT).show();

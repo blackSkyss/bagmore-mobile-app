@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 
 public class DescribeProductsViewModel {
-    @SerializedName("Color")
+    @SerializedName("color")
     public ColorProductDetailViewModel Color;
-    @SerializedName("Size")
+    @SerializedName("size")
     public SizeProductDetailViewModel Size;
-    @SerializedName("Price")
+    @SerializedName("price")
     public BigDecimal Price;
 
     public DescribeProductsViewModel(ColorProductDetailViewModel color, SizeProductDetailViewModel size, BigDecimal price) {

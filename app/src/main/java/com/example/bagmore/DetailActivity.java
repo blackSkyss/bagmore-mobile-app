@@ -1,5 +1,15 @@
 package com.example.bagmore;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,35 +18,28 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.adapters.ViewPagerAdapter;
-import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.bagmore.Adapters.TabViewAdapters.ProductHomeTVAdapter;
+import com.example.bagmore.AuthScreen.LoginActivity;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.ProductDetailViewModel;
-import com.example.bagmore.Models.data.ProductViewModel;
-import com.example.bagmore.Models.json.request.JsonProductDetailReq;
+import com.example.bagmore.Models.data.ProductImageViewModel;
+import com.example.bagmore.Models.data.TokenRefreshViewModel;
+import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
 import com.example.bagmore.Models.json.response.JsonProductDetailRes;
-import com.example.bagmore.Models.json.response.JsonProductViewModel;
+import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
 import com.example.bagmore.OrderScreen.CartActivity;
 import com.example.bagmore.Repository.ProductRepository;
-import com.example.bagmore.SearchingScreen.SortActivity;
+import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.Services.ProductService;
+import com.example.bagmore.Services.UserService;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,31 +49,27 @@ import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
+    //region init
     private TabLayout mtabLayout;
     private ViewPager mViewPager;
     private ProductHomeTVAdapter mViewPagerAdapter;
     private MaterialButton btnCart;
     private Button btnAddToCart;
     ProductService productService;
+
+    UserService userService;
     private int productId;
-    ProductDetailViewModel product = new ProductDetailViewModel();
+
+    ImageSlider imageSlider;
+    //endregion
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-
-        ImageSlider imageSlider = findViewById(R.id.img_slider);
-        List<SlideModel> slideModels = new ArrayList<>();
-
-        // set image for image slider
-        slideModels.add(new SlideModel(R.drawable.img1, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.img2, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.img3, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.img4, ScaleTypes.FIT));
-
-        // binding image to slider
-        imageSlider.setImageList(slideModels);
+        userService = UserRepository.getUserService();
+        imageSlider = findViewById(R.id.img_slider);
 
         // init and config tool bar
         initToolbar();
@@ -79,48 +78,97 @@ public class DetailActivity extends AppCompatActivity {
         btnAddToCart = findViewById(R.id.btn_add_cart);
         mtabLayout = findViewById(R.id.tab_layout);
         mViewPager = findViewById(R.id.view_page);
+        productService = ProductRepository.getProductService();
 
-        mViewPagerAdapter = new ProductHomeTVAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        getProductDetailById();
+        OnClickHandler();
+    }
 
+
+    //region Call API detail
+    private void getProductDetailById() {
+
+        Intent intent = getIntent();
+        productId = (int) intent.getSerializableExtra("product");
+
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
+        Call<JsonProductDetailRes> callGetProducts = productService.getProductDetailById("bearer " + tokenManager.getAccessToken(), productId);
+        callGetProducts.enqueue(new Callback<JsonProductDetailRes>() {
+            @Override
+            public void onResponse(Call<JsonProductDetailRes> call, Response<JsonProductDetailRes> response) {
+                if (response.isSuccessful()) {
+                    JsonProductDetailRes jsonModel = response.body();
+
+                    List<String> imageString = null;
+                    List<ProductImageViewModel> listImage = response.body().getData().ProductImages;
+                    for (ProductImageViewModel image : listImage) {
+                        imageString.add(image.Source);
+                    }
+                    if (imageString != null) {
+                        initSlide(imageString);
+                    }
+
+                    intiTabBar(jsonModel.getData());
+
+                } else if (response.code() == 401) {
+                    Toast.makeText(DetailActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
+                    refreshTokenAPI();
+                } else {
+                    Toast.makeText(DetailActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonProductDetailRes> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    //endregion
+
+    //region init image slide
+    private void initSlide(List<String> imageList) {
+        List<SlideModel> slideModels = new ArrayList<>();
+
+        for (String image : imageList) {
+            try {
+
+                byte[] slideData = image.getBytes("UTF-8");
+
+                // Create a ByteArrayInputStream from the byte array
+                ByteArrayInputStream bis = new ByteArrayInputStream(slideData);
+
+                // Create an ObjectInputStream to deserialize the byte stream
+                ObjectInputStream ois = new ObjectInputStream(bis);
+
+                // Deserialize the byte stream into a SlideModel object
+                SlideModel slideModel = (SlideModel) ois.readObject();
+
+                // Add the SlideModel object to the list
+                slideModels.add(slideModel);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // binding image to slider
+        imageSlider.setImageList(slideModels);
+    }
+    //endregion
+
+    //region init tab bar
+    private void intiTabBar(ProductDetailViewModel product) {
+        mViewPagerAdapter = new ProductHomeTVAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, product);
         // binding fragment to tab layout
         mViewPager.setAdapter(mViewPagerAdapter);
         mtabLayout.setupWithViewPager(mViewPager);
 
         // set animation when collapsing tool bar
         setTabLayAnimation();
+    }
+    //endregion
 
-        // set click handler for button
-        OnClickHandler();
-        productService = ProductRepository.getProductService();
-          ProductDetailViewModel productDetail =  getProductDetailById();
-
-        }
-
-
-        private  ProductDetailViewModel getProductDetailById(){
-
-            Intent intent = getIntent();
-            productId = (int) intent.getSerializableExtra("product");
-            Call<JsonProductDetailRes> callGetProducts = productService.getProductDetailById(productId);
-            callGetProducts.enqueue(new Callback<JsonProductDetailRes>() {
-                @Override
-                public void onResponse(Call<JsonProductDetailRes> call, Response<JsonProductDetailRes> response) {
-                    if (response.isSuccessful()) {
-                        JsonProductDetailRes jsonModel = response.body();
-                         product = jsonModel.getData();
-                        Toast.makeText(DetailActivity.this, "Success detail", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(DetailActivity.this, "Vao day", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonProductDetailRes> call, Throwable t) {
-                    Toast.makeText(DetailActivity.this, "VKLKKKKK vcc", Toast.LENGTH_SHORT).show();
-                }
-            });
-            return product;
-        }
+    //region init toolbar
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.tool_bar);
         TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -134,12 +182,10 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-
-    // Back to previous activity
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -159,8 +205,10 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+    //endregion
 
-    private void OnClickHandler(){
+    //region onClick handler
+    private void OnClickHandler() {
         // go to cart screen
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,4 +227,47 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+    //endregion
+
+    //region refresh token
+    private void refreshTokenAPI() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            JsonRefreshTokenReq json = new JsonRefreshTokenReq(tokenManager.getAccessToken(), tokenManager.getRefreshToken());
+            Call<JsonRefreshTokenRes> result = userService.userRefreshToken(json);
+            result.enqueue(new Callback<JsonRefreshTokenRes>() {
+                @Override
+                public void onResponse(Call<JsonRefreshTokenRes> call, Response<JsonRefreshTokenRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonRefreshTokenRes jsonRefreshTokenResponse = response.body();
+                        TokenRefreshViewModel tokenRefresh = jsonRefreshTokenResponse.getData();
+                        tokenManager.clearToken();
+                        tokenManager.saveToken(tokenRefresh.getAccessToken(), tokenRefresh.getRefreshToken());
+                        getProductDetailById();
+                    } else {
+                        tokenManager.clearToken();
+                        navigation();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonRefreshTokenRes> call, Throwable t) {
+                    Toast.makeText(DetailActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region navigation
+    private void navigation() {
+        Intent intent = new Intent(DetailActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+    //endregion
 }
