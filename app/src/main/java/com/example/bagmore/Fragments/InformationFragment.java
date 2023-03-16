@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,8 @@ public class InformationFragment extends Fragment {
     AppCompatRadioButton rbS, rbM, rbL, rbXL, rbXXL, rbw, rbb, rbr, rbp, rbbr;
     MaterialButton btnMinus, btnPlus;
     EditText edtQuantity;
+
+    TextView textViewInfor;
     //endregion
 
     private int quantity = 1;
@@ -91,9 +94,11 @@ public class InformationFragment extends Fragment {
         rbp.setOnCheckedChangeListener(listener_rbp);
         rbbr.setOnCheckedChangeListener(listener_rbbr);
         //endregion
-
         edtQuantity.setText(String.valueOf(quantity));
 
+        //textView
+
+        /*textViewInfor = view.findViewById();*/
         handlerQuantity();
     }
 

@@ -17,7 +17,7 @@ public class JsonProductViewModel {
     private List<Integer> filterByColor;
     @SerializedName("filterBySize")
     private List<Integer> filterBySize;
-    @SerializedName("productViewModels")
+    @SerializedName("data")
     private List<ProductViewModel> productViewModels;
 
     public JsonProductViewModel() {

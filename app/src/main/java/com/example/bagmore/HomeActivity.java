@@ -2,6 +2,7 @@ package com.example.bagmore;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.UserHandle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -12,13 +13,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ProductHomeRVAdapter;
+import com.example.bagmore.AuthScreen.LoginActivity;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Interfaces.IClickItemProductListener;
 import com.example.bagmore.Models.data.ProductViewModel;
+import com.example.bagmore.Models.data.TokenRefreshViewModel;
+import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
+import com.example.bagmore.Models.json.response.JsonProductViewModel;
+import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
 import com.example.bagmore.OrderScreen.CartActivity;
 import com.example.bagmore.ProfileScreen.ProfileOverallActivity;
+import com.example.bagmore.Repository.ProductRepository;
+import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.SearchingScreen.FilterActivity;
 import com.example.bagmore.SearchingScreen.SearchActivity;
 import com.example.bagmore.SearchingScreen.SortActivity;
+import com.example.bagmore.Services.ProductService;
+import com.example.bagmore.Services.UserService;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -26,12 +37,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
 
     //region init UI component
-    // ProductService productService;
+    ProductService productService;
     RecyclerView.LayoutManager layoutManager;
     ProductHomeRVAdapter recyclerViewHomeAdapter;
     private RecyclerView recyclerView;
@@ -39,6 +53,8 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialButton btnSort, btnFilter, btnHome, btnNotification, btnDiscovery, btnShop, btnAccount;
     @BindView(R.id.swipe_rf_product)
     SwipeRefreshLayout rfProduct;
+
+    UserService userService;
     //endregion
 
     @Override
@@ -52,63 +68,56 @@ public class HomeActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        // getAllProduct();
-        setCallBackFunction();
+        setCallBackFunction(getAllProduct());
+        OnClickHandler();
 
         recyclerView.setAdapter(recyclerViewHomeAdapter);
         recyclerView.setHasFixedSize(true);
-
-        OnClickHandler();
-
     }
 
     //region call api
-//    private void getAllProduct() {
-//
-//        try {
-//            Call<JsonProductViewModel> callGetProducts = productService.getProducts();
-//            callGetProducts.enqueue(new Callback<JsonProductViewModel>() {
-//                @Override
-//                public void onResponse(Call<JsonProductViewModel> call, Response<JsonProductViewModel> response) {
-//                    JsonProductViewModel jsonModel = response.body();
-//                    List<ProductViewModel> products = jsonModel.getProductViewModels();
-//
-//                    // setCallBackFunction(products);
-//                    Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onFailure(Call<JsonProductViewModel> call, Throwable t) {
-//
-//                    if (t instanceof IOException) {
-//                        try {
-//                            Toast.makeText(HomeActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-//                            throw new IOException("some thing wrong", t);
-//                        } catch (IOException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    } else {
-//                        try {
-//                            throw new Exception(t);
-//                        } catch (Exception e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
-//                }
-//            });
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
+    private List<ProductViewModel> getAllProduct() {
+
+        List<ProductViewModel> products = new ArrayList<>();
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            Call<JsonProductViewModel> callGetProducts = productService.getProducts(/*tokenManager.getAccessToken()*/);
+            callGetProducts.enqueue(new Callback<JsonProductViewModel>() {
+                @Override
+                public void onResponse(Call<JsonProductViewModel> call, Response<JsonProductViewModel> response) {
+                    if (response.isSuccessful()) {
+                        JsonProductViewModel jsonModel = response.body();
+                        products.addAll(jsonModel.getProductViewModels());
+                        Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        refreshTokenAPI();
+                        Toast.makeText(HomeActivity.this, "VKL", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonProductViewModel> call, Throwable t) {
+                    Toast.makeText(HomeActivity.this, "VKLKKKKK vcc", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return products;
+    }
     //endregion
 
     //region set call back
-    private void setCallBackFunction() {
+    private void setCallBackFunction(List<ProductViewModel> products) {
         recyclerViewHomeAdapter = new ProductHomeRVAdapter(new IClickItemProductListener() {
             // go to detail screen
             @Override
             public void OnClickImageView(ProductViewModel product) {
-                startActivity(new Intent(HomeActivity.this, DetailActivity.class));
+                Intent intent = new Intent(HomeActivity.this,DetailActivity.class);
+                intent.putExtra("product", product.getId());
+                startActivity(intent);
             }
 
             // add product to wish list
@@ -123,7 +132,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        recyclerViewHomeAdapter.setData(getData());
+
+        recyclerViewHomeAdapter.setData(products);
     }
     //endregion
 
@@ -138,8 +148,8 @@ public class HomeActivity extends AppCompatActivity {
         btnDiscovery = findViewById(R.id.btn_discovery);
         btnShop = findViewById(R.id.btn_shop);
         btnAccount = findViewById(R.id.btn_account);
-
-//        productService = ProductRepository.getProductService();
+        productService = ProductRepository.getProductService();
+        userService = UserRepository.getUserService();
     }
     //endregion
 
@@ -228,22 +238,55 @@ public class HomeActivity extends AppCompatActivity {
 
     //region onRefresh handler
     private void onRefreshHandler() {
-        recyclerViewHomeAdapter.cleanData();
-        recyclerViewHomeAdapter.setData(getData());
+        List<ProductViewModel> products = getAllProduct();
+        recyclerViewHomeAdapter.setData(products);
+        recyclerViewHomeAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(recyclerViewHomeAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.invalidate();
         rfProduct.setRefreshing(false);
     }
     //endregion
 
-    //region dummy data
-    private List<ProductViewModel> getData() {
-        List<ProductViewModel> list = new ArrayList<>();
-        list.add(new ProductViewModel(1, "haha", "120", "180", "Wrist watch in gold color metallic", R.drawable.img1));
-        list.add(new ProductViewModel(2, "haha", "250", "380", "Women's bag in orange color with strips", R.drawable.img2));
-        list.add(new ProductViewModel(3, "haha", "150", "200", "Triple fallen shoulder mini skater dress", R.drawable.img3));
-        list.add(new ProductViewModel(4, "haha", "320", "400", "Eva embellished cami midi wedding dress", R.drawable.img4));
-        list.add(new ProductViewModel(5, "haha", "110", "210", "Women's bag in orange color with strips", R.drawable.img5));
-        list.add(new ProductViewModel(6, "haha", "310", "420", "Wrist watch in gold color metallic", R.drawable.img6));
-        return list;
+    //region refresh token
+    private void refreshTokenAPI() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            JsonRefreshTokenReq json = new JsonRefreshTokenReq(tokenManager.getAccessToken(), tokenManager.getRefreshToken());
+            Call<JsonRefreshTokenRes> result = userService.userRefreshToken(json);
+            result.enqueue(new Callback<JsonRefreshTokenRes>() {
+                @Override
+                public void onResponse(Call<JsonRefreshTokenRes> call, Response<JsonRefreshTokenRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonRefreshTokenRes jsonRefreshTokenResponse = response.body();
+                        TokenRefreshViewModel tokenRefresh = jsonRefreshTokenResponse.getData();
+                        tokenManager.clearToken();
+                        tokenManager.saveToken(tokenRefresh.getAccessToken(), tokenRefresh.getRefreshToken());
+                        getAllProduct();
+                    } else {
+                        tokenManager.clearToken();
+                        navigation();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonRefreshTokenRes> call, Throwable t) {
+                    Toast.makeText(HomeActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region navigation
+    private void navigation() {
+        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     //endregion
 }

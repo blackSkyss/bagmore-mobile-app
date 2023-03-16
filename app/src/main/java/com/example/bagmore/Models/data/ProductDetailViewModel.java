@@ -17,6 +17,10 @@ public class ProductDetailViewModel {
         DescribeProducts = describeProducts;
     }
 
+    public ProductDetailViewModel() {
+
+    }
+
     public String getName() {
         return Name;
     }

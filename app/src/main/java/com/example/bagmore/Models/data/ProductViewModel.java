@@ -15,12 +15,12 @@ public class ProductViewModel {
     @SerializedName("description")
     private String description;
     @SerializedName("source")
-    private int source;
+    private String source;
 
     public ProductViewModel() {
     }
 
-    public ProductViewModel(int id, String name, String minPrice, String maxPrice, String description, int source) {
+    public ProductViewModel(int id, String name, String minPrice, String maxPrice, String description, String source) {
         this.id = id;
         this.name = name;
         this.minPrice = minPrice;
@@ -69,11 +69,11 @@ public class ProductViewModel {
         this.description = description;
     }
 
-    public int getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(int source) {
+    public void setSource(String source) {
         this.source = source;
     }
 }
