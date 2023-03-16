@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -52,7 +53,7 @@ public class DetailActivity extends AppCompatActivity {
     private Button btnAddToCart;
     ProductService productService;
     private int productId;
-
+    ProductDetailViewModel product = new ProductDetailViewModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,22 +92,25 @@ public class DetailActivity extends AppCompatActivity {
         // set click handler for button
         OnClickHandler();
         productService = ProductRepository.getProductService();
-        getProductDetailById();
+          ProductDetailViewModel productDetail =  getProductDetailById();
+
         }
 
 
-        private ProductDetailViewModel getProductDetailById(){
-            final ProductDetailViewModel[] product = {new ProductDetailViewModel()};
+        private  ProductDetailViewModel getProductDetailById(){
+
             Intent intent = getIntent();
             productId = (int) intent.getSerializableExtra("product");
-            Call<JsonProductDetailRes> callGetProducts =  productService.getProductDetailById(productId);
+            Call<JsonProductDetailRes> callGetProducts = productService.getProductDetailById(productId);
             callGetProducts.enqueue(new Callback<JsonProductDetailRes>() {
                 @Override
                 public void onResponse(Call<JsonProductDetailRes> call, Response<JsonProductDetailRes> response) {
                     if (response.isSuccessful()) {
                         JsonProductDetailRes jsonModel = response.body();
-                        product[0] = jsonModel.getProductDetail();
-                        Toast.makeText(DetailActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                         product = jsonModel.getData();
+                        Toast.makeText(DetailActivity.this, "Success detail", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(DetailActivity.this, "Vao day", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -115,7 +119,7 @@ public class DetailActivity extends AppCompatActivity {
                     Toast.makeText(DetailActivity.this, "VKLKKKKK vcc", Toast.LENGTH_SHORT).show();
                 }
             });
-            return product[0];
+            return product;
         }
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.tool_bar);
