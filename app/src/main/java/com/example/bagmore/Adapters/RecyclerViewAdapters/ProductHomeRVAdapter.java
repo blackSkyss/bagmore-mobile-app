@@ -59,10 +59,9 @@ public class ProductHomeRVAdapter extends RecyclerView.Adapter<ProductHomeRVAdap
         }
 
         byte[] bytes = android.util.Base64.decode(products.get(position).getSource(), Base64.DEFAULT);
-           Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-           holder.image.setImageBitmap(bitmap);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        holder.image.setImageBitmap(bitmap);
 
-        // holder.image.setImageResource(product.getSource());
         String price = "$" + product.getMinPrice() + " - " + "$" + product.getMaxPrice();
         holder.title.setText(price);
         holder.description.setText(product.getDescription());

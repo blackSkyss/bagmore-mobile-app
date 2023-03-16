@@ -11,7 +11,7 @@ import retrofit2.http.Path;
 
 public interface ProductService {
     @GET("user/product/products")
-    Call<JsonProductViewModel> getProducts(/*@Header(ApiClient.AUTH_HEADER) String accessToken*/);
+    Call<JsonProductViewModel> getProducts(@Header(ApiClient.AUTH_HEADER) String accessToken);
 
     @GET("user/Product/Get/{productId}")
     Call<JsonProductDetailRes> getProductDetailById(@Path("productId") int productId);

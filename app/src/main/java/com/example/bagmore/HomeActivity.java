@@ -2,7 +2,6 @@ package com.example.bagmore;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.UserHandle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -31,9 +30,6 @@ import com.example.bagmore.SearchingScreen.SortActivity;
 import com.example.bagmore.Services.ProductService;
 import com.example.bagmore.Services.UserService;
 import com.google.android.material.button.MaterialButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,54 +64,56 @@ public class HomeActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        setCallBackFunction(getAllProduct());
+        setCallBackFunction();
+        getAllProduct();
         OnClickHandler();
 
         recyclerView.setAdapter(recyclerViewHomeAdapter);
         recyclerView.setHasFixedSize(true);
+
     }
 
     //region call api
-    private List<ProductViewModel> getAllProduct() {
-
-        List<ProductViewModel> products = new ArrayList<>();
+    private void getAllProduct() {
         try {
             TokenManager tokenManager = new TokenManager(getApplicationContext());
-            Call<JsonProductViewModel> callGetProducts = productService.getProducts(/*tokenManager.getAccessToken()*/);
+            String token = tokenManager.getAccessToken();
+            Call<JsonProductViewModel> callGetProducts = productService.getProducts("bearer " + token);
             callGetProducts.enqueue(new Callback<JsonProductViewModel>() {
                 @Override
                 public void onResponse(Call<JsonProductViewModel> call, Response<JsonProductViewModel> response) {
                     if (response.isSuccessful()) {
                         JsonProductViewModel jsonModel = response.body();
-                        products.addAll(jsonModel.getProductViewModels());
-                        Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                    } else {
+                        recyclerViewHomeAdapter.setData(jsonModel.getProductViewModels());
+                        recyclerViewHomeAdapter.notifyDataSetChanged();
+                        Toast.makeText(HomeActivity.this, "Load success", Toast.LENGTH_SHORT).show();
+                    } else if (response.code() == 401) {
+                        Toast.makeText(HomeActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
                         refreshTokenAPI();
-                        Toast.makeText(HomeActivity.this, "VKL", Toast.LENGTH_SHORT).show();
-
+                    } else {
+                        Toast.makeText(HomeActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<JsonProductViewModel> call, Throwable t) {
-                    Toast.makeText(HomeActivity.this, "VKLKKKKK vcc", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Failed to all API", Toast.LENGTH_SHORT).show();
 
                 }
             });
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return products;
     }
     //endregion
 
     //region set call back
-    private void setCallBackFunction(List<ProductViewModel> products) {
+    private void setCallBackFunction() {
         recyclerViewHomeAdapter = new ProductHomeRVAdapter(new IClickItemProductListener() {
             // go to detail screen
             @Override
             public void OnClickImageView(ProductViewModel product) {
-                Intent intent = new Intent(HomeActivity.this,DetailActivity.class);
+                Intent intent = new Intent(HomeActivity.this, DetailActivity.class);
                 intent.putExtra("product", product.getId());
                 startActivity(intent);
             }
@@ -131,9 +129,6 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(HomeActivity.this, "Remove from wish list", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        recyclerViewHomeAdapter.setData(products);
     }
     //endregion
 
@@ -238,12 +233,8 @@ public class HomeActivity extends AppCompatActivity {
 
     //region onRefresh handler
     private void onRefreshHandler() {
-        List<ProductViewModel> products = getAllProduct();
-        recyclerViewHomeAdapter.setData(products);
+        getAllProduct();
         recyclerViewHomeAdapter.notifyDataSetChanged();
-        recyclerView.setAdapter(recyclerViewHomeAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.invalidate();
         rfProduct.setRefreshing(false);
     }
     //endregion
