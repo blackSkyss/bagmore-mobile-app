@@ -40,13 +40,22 @@ public class DeliveryTVAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 1:
                 confirmed.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
+
                 getConfirmed();
+
                 if (confirmed == null || confirmed.size() == 0) {
                     return new DeliveryNothingFragment();
                 }
                 return new ConfirmedFragment(confirmed);
             case 2:
                 delivery.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
+
                 getDelivery();
                 if (delivery == null || delivery.size() == 0) {
                     return new DeliveryNothingFragment();
@@ -54,6 +63,9 @@ public class DeliveryTVAdapter extends FragmentStatePagerAdapter {
                 return new DeliveryFragment(delivery);
             case 3:
                 delivered.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
                 getDelivered();
                 if (delivered == null || delivered.size() == 0) {
                     return new DeliveryNothingFragment();
@@ -61,6 +73,9 @@ public class DeliveryTVAdapter extends FragmentStatePagerAdapter {
                 return new DeliveredFragment(delivered);
             case 4:
                 canceled.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
                 getCanceled();
                 if (canceled == null || canceled.size() == 0) {
                     return new DeliveryNothingFragment();
@@ -68,6 +83,9 @@ public class DeliveryTVAdapter extends FragmentStatePagerAdapter {
                 return new CanceledFragment(canceled);
             case 5:
                 returned.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
                 getReturn();
                 if (returned == null || returned.size() == 0) {
                     return new DeliveryNothingFragment();
@@ -75,6 +93,9 @@ public class DeliveryTVAdapter extends FragmentStatePagerAdapter {
                 return new ReturnFragment(returned);
             case 6:
                 exchange.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
                 getExchange();
                 if (exchange == null || exchange.size() == 0) {
                     return new DeliveryNothingFragment();
@@ -83,6 +104,9 @@ public class DeliveryTVAdapter extends FragmentStatePagerAdapter {
 
             default:
                 confirming.clear();
+                if (items == null) {
+                    return new DeliveryNothingFragment();
+                }
                 getConfirming();
                 if (confirming == null || confirming.size() == 0) {
                     return new DeliveryNothingFragment();

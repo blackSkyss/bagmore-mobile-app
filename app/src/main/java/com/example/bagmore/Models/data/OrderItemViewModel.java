@@ -2,10 +2,11 @@ package com.example.bagmore.Models.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class OrderItemViewModel {
+public class OrderItemViewModel implements Serializable {
 
     @SerializedName("productId")
     private int productId;
@@ -13,16 +14,16 @@ public class OrderItemViewModel {
     @SerializedName("productName")
     private String productName;
 
-    @SerializedName("sizeName")
+    @SerializedName("productSize")
     private String sizeName;
 
-    @SerializedName("colorName")
+    @SerializedName("productColor")
     private String colorName;
 
     @SerializedName("price")
     private BigDecimal price;
 
-    @SerializedName("amount")
+    @SerializedName("amout")
     private int amount;
 
     @SerializedName("productImages")

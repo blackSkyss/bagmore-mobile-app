@@ -15,8 +15,10 @@ import com.example.bagmore.Adapters.RecyclerViewAdapters.ItemCartRVAdapter;
 import com.example.bagmore.DetailActivity;
 import com.example.bagmore.Interfaces.IClickItemCartItem;
 import com.example.bagmore.Models.data.CartViewModel;
+import com.example.bagmore.Models.data.OrderItemViewModel;
 import com.example.bagmore.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,7 +31,9 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private ItemCartRVAdapter itemCartRVAdapter;
 
-    private List<CartViewModel> items;
+    private List<CartViewModel> itemCarts;
+
+    private List<OrderItemViewModel> itemOrders;
 
     @BindView(R.id.title_bottom_order)
     TextView total;
@@ -46,11 +50,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         configTextBottom();
 
 
-        items = (List<CartViewModel>) getIntent().getExtras().get("object_listitem");
-
+        itemOrders = (List<OrderItemViewModel>) getIntent().getExtras().get("object_listitem");
         rcvOrderDetail = findViewById(R.id.rcv_detail_order);
 
-        onCallbackHandler();
+        onCallbackHandler(itemOrders);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         rcvOrderDetail.setLayoutManager(linearLayoutManager);
@@ -58,7 +61,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     //region callback handler
-    private void onCallbackHandler() {
+    private void onCallbackHandler(List<OrderItemViewModel> items) {
         itemCartRVAdapter = new ItemCartRVAdapter(new IClickItemCartItem() {
             @Override
             public void handlerButtonClick(CartViewModel viewModel) {
@@ -71,7 +74,27 @@ public class OrderDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }, "Detail", false, true);
-        itemCartRVAdapter.setData(null);
+
+        itemCarts = convertToCartViewModel(items);
+        itemCartRVAdapter.setData(itemCarts);
+    }
+    //endregion
+
+    //region convert OrderItemViewModel to CartViewModel
+    private List<CartViewModel> convertToCartViewModel(List<OrderItemViewModel> items) {
+        List<CartViewModel> itemCarts = new ArrayList<>();
+        for (OrderItemViewModel itemOrder : items) {
+            CartViewModel itemCart = new CartViewModel(
+                    itemOrder.getProductId(),
+                    itemOrder.getProductName(),
+                    itemOrder.getPrice(),
+                    0.5f,
+                    itemOrder.getAmount(),
+                    itemOrder.getColorName(),
+                    itemOrder.getSizeName(),
+                    itemOrder.getProductsImage());
+        }
+        return itemCarts;
     }
     //endregion
 

@@ -57,6 +57,7 @@ public class CartActivity extends AppCompatActivity {
 
     WishListService wishListService;
 
+    private int totalPrice = 0;
     private boolean acceptCheckout = false;
     //endregion
 
@@ -69,9 +70,10 @@ public class CartActivity extends AppCompatActivity {
 
         initToolbar();
         initUI();
-        TextBottomHandler();
 
         getAllCartAPI();
+
+        TextBottomHandler();
     }
 
     //region init toolbar
@@ -148,8 +150,11 @@ public class CartActivity extends AppCompatActivity {
                     Toast.makeText(CartActivity.this, "Your cart is empty!!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+
                 Intent i = new Intent(CartActivity.this, CheckoutActivity.class);
-                startActivityForResult(i, CODE);
+                i.putExtra("total_price", totalPrice);
+                startActivity(i);
             }
         });
     }
@@ -241,6 +246,8 @@ public class CartActivity extends AppCompatActivity {
         for (CartViewModel item : itemsCart) {
             total += (item.getPrice().intValue() * item.getAmount());
         }
+
+        totalPrice = total;
         if (total == 0) {
             acceptCheckout = false;
             titleBottomOrder.setText("Nothing to checkout");

@@ -62,6 +62,9 @@ public class ShippingAddressActivity extends AppCompatActivity {
     UserService userService;
 
     ShippingAddressService shippingAddressService;
+
+    private String nameShipping = "HAHA";
+    private int idShipping = 0;
     //endregion
 
     @Override
@@ -84,7 +87,9 @@ public class ShippingAddressActivity extends AppCompatActivity {
         shippingAddressRVAdapter = new ShippingAddressRVAdapter(new IClickItemShippingAddress() {
             @Override
             public void onClickItemShipping(ShippingAddressViewModel viewModel) {
-                Toast.makeText(ShippingAddressActivity.this, viewModel.getAddress() + "Selected", Toast.LENGTH_SHORT).show();
+                idShipping = viewModel.getId();
+                nameShipping = viewModel.getAddress();
+                Toast.makeText(ShippingAddressActivity.this, viewModel.getAddress() + " Selected", Toast.LENGTH_SHORT).show();
             }
         });
         shippingAddressRVAdapter.setData(shippings);
@@ -150,6 +155,15 @@ public class ShippingAddressActivity extends AppCompatActivity {
         titleBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (idShipping == 0) {
+                    Toast.makeText(ShippingAddressActivity.this, "Please choose any one", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra("id_shipping", idShipping);
+                intent.putExtra("name_shipping", nameShipping);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });

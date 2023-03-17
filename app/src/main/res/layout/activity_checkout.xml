@@ -133,6 +133,38 @@
 
     </LinearLayout>
 
-    <include layout="@layout/bottom_navigation_order"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ln_shipping_address"
+        android:layout_marginTop="14dp"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_delivery_ck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bd_bt_item_checkout"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="● Delivery: None"
+            android:textSize="18dp" />
+
+
+        <TextView
+            android:id="@+id/tv_shipping_ck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bd_bt_item_checkout"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="● Shipping: None"
+            android:textSize="18dp" />
+
+    </LinearLayout>
+
+    <include layout="@layout/bottom_navigation_order" />
 
 </RelativeLayout>

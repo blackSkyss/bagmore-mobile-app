@@ -2,9 +2,10 @@ package com.example.bagmore.Models.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OrderViewModel {
+public class OrderViewModel implements Serializable {
 
     @SerializedName("id")
     private int id;

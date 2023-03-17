@@ -2,7 +2,9 @@ package com.example.bagmore.Models.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductImageViewModel {
+import java.io.Serializable;
+
+public class ProductImageViewModel implements Serializable {
     @SerializedName("source")
     public String Source;
 

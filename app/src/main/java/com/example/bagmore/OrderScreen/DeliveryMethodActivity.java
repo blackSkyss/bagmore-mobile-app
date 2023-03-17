@@ -1,5 +1,6 @@
 package com.example.bagmore.OrderScreen;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -56,6 +57,10 @@ public class DeliveryMethodActivity extends AppCompatActivity {
     UserService userService;
 
     DeliveryMethodService deliveryMethodService;
+
+    private String nameDelivery = "Haha";
+    private int idDelivery = 0;
+    private int priceDelivery = 0;
     //endregion
 
     @Override
@@ -79,6 +84,9 @@ public class DeliveryMethodActivity extends AppCompatActivity {
         deliveryMethodRVAdapter = new DeliveryMethodRVAdapter(new IClickItemDeliveryMethod() {
             @Override
             public void onClickItemDelivery(DeliveryMethodViewModel viewModel) {
+                priceDelivery = viewModel.getPrice();
+                idDelivery = viewModel.getId();
+                nameDelivery = viewModel.getName();
                 Toast.makeText(DeliveryMethodActivity.this, viewModel.getName() + "Selected", Toast.LENGTH_SHORT).show();
             }
         });
@@ -136,6 +144,16 @@ public class DeliveryMethodActivity extends AppCompatActivity {
         titleBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (idDelivery == 0) {
+                    Toast.makeText(DeliveryMethodActivity.this, "Please choose any one!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra("id_delivery", idDelivery);
+                intent.putExtra("price_delivery", priceDelivery);
+                intent.putExtra("name_delivery", nameDelivery);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
