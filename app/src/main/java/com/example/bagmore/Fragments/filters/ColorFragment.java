@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ColorRVAdapter;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.ColorViewModel;
 import com.example.bagmore.Models.json.response.JsonColor;
 import com.example.bagmore.R;
@@ -83,7 +84,8 @@ public class ColorFragment extends Fragment {
     //region call api
     private void getAllColors() {
         try {
-            Call<JsonColor> result = colorService.getColors();
+            TokenManager tokenManager = new TokenManager(getContext());
+            Call<JsonColor> result = colorService.getColors("bearer " + tokenManager.getAccessToken());
             result.enqueue(new Callback<JsonColor>() {
                 @Override
                 public void onResponse(Call<JsonColor> call, Response<JsonColor> response) {

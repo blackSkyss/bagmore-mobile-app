@@ -15,7 +15,6 @@ import com.example.bagmore.Adapters.RecyclerViewAdapters.ItemCartRVAdapter;
 import com.example.bagmore.DetailActivity;
 import com.example.bagmore.Interfaces.IClickItemCartItem;
 import com.example.bagmore.Models.data.CartViewModel;
-import com.example.bagmore.Models.data.ItemCartViewModel;
 import com.example.bagmore.R;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }, "Detail", false, true);
-        itemCartRVAdapter.setData(items);
+        itemCartRVAdapter.setData(null);
     }
     //endregion
 

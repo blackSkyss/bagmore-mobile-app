@@ -16,7 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ItemCartRVAdapter;
 import com.example.bagmore.Interfaces.IClickItemCartItem;
 import com.example.bagmore.Models.data.CartViewModel;
-import com.example.bagmore.Models.data.ItemCartViewModel;
 import com.example.bagmore.OrderScreen.CartActivity;
 import com.example.bagmore.R;
 

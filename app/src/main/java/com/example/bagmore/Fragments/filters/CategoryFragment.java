@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.CategoryRVAdapter;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.CategoryViewModel;
 import com.example.bagmore.Models.json.response.JsonCategory;
 import com.example.bagmore.R;
@@ -86,7 +87,8 @@ public class CategoryFragment extends Fragment {
     //region call api
     private void getAllCategories() {
         try {
-            Call<JsonCategory> result = categoryService.getCategories();
+            TokenManager tokenManager = new TokenManager(getContext());
+            Call<JsonCategory> result = categoryService.getCategories("bearer " + tokenManager.getAccessToken());
             result.enqueue(new Callback<JsonCategory>() {
                 @Override
                 public void onResponse(Call<JsonCategory> call, Response<JsonCategory> response) {

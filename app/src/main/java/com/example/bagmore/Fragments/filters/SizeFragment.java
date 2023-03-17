@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.SizeRVAdapter;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.SizeViewModel;
 import com.example.bagmore.Models.json.response.JsonSize;
 import com.example.bagmore.R;
@@ -82,7 +83,8 @@ public class SizeFragment extends Fragment {
     //region call api
     private void getAllSizes() {
         try {
-            Call<JsonSize> result = sizeService.getSizes();
+            TokenManager tokenManager = new TokenManager(getContext());
+            Call<JsonSize> result = sizeService.getSizes("bearer " + tokenManager.getAccessToken());
             result.enqueue(new Callback<JsonSize>() {
                 @Override
                 public void onResponse(Call<JsonSize> call, Response<JsonSize> response) {

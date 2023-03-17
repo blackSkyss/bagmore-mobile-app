@@ -1,26 +1,31 @@
 package com.example.bagmore.Models.json.response;
 
 import com.example.bagmore.Models.data.OrderViewModel;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class JsonOrder {
-    private int success;
+
+    @SerializedName("success")
+    private String success;
+
+    @SerializedName("data")
     private List<OrderViewModel> orders;
 
     public JsonOrder() {
     }
 
-    public JsonOrder(int success, List<OrderViewModel> orders) {
+    public JsonOrder(String success, List<OrderViewModel> orders) {
         this.success = success;
         this.orders = orders;
     }
 
-    public int getSuccess() {
+    public String getSuccess() {
         return success;
     }
 
-    public void setSuccess(int success) {
+    public void setSuccess(String success) {
         this.success = success;
     }
 

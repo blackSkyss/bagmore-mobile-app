@@ -1,20 +1,30 @@
 package com.example.bagmore.Models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class OrderViewModel {
+
+    @SerializedName("id")
     private int id;
+    @SerializedName("deliveryStatus")
     private int deliveryStatus;
+    @SerializedName("orderedDate")
     private String orderDay;
+    @SerializedName("shippingAddress")
     private String shipAddress;
+    @SerializedName("status")
     private int status;
+    @SerializedName("deliveryMethod")
     private String deliveryMethod;
-    private List<ItemCartViewModel> productOrders;
+    @SerializedName("products")
+    private List<OrderItemViewModel> productOrders;
 
     public OrderViewModel() {
     }
 
-    public OrderViewModel(int id, int deliveryStatus, String orderDay, String shipAddress, int status, String deliveryMethod, List<ItemCartViewModel> productOrders) {
+    public OrderViewModel(int id, int deliveryStatus, String orderDay, String shipAddress, int status, String deliveryMethod, List<OrderItemViewModel> productOrders) {
         this.id = id;
         this.deliveryStatus = deliveryStatus;
         this.orderDay = orderDay;
@@ -72,11 +82,11 @@ public class OrderViewModel {
         this.deliveryMethod = deliveryMethod;
     }
 
-    public List<ItemCartViewModel> getProductOrders() {
+    public List<OrderItemViewModel> getProductOrders() {
         return productOrders;
     }
 
-    public void setProductOrders(List<ItemCartViewModel> productOrders) {
+    public void setProductOrders(List<OrderItemViewModel> productOrders) {
         this.productOrders = productOrders;
     }
 }
