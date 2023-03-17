@@ -1,24 +1,34 @@
 package com.example.bagmore.Models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ShippingAddressViewModel {
+
+    @SerializedName("id")
     private int id;
-    private String name;
+    @SerializedName("firstName")
+    private String firstName;
+    @SerializedName("lastName")
+    private String lastName;
+    @SerializedName("phone")
     private String phone;
+    @SerializedName("address")
     private String address;
+    @SerializedName("status")
     private int status;
-    private int imageUser;
+
     private boolean isChecked;
 
     public ShippingAddressViewModel() {
     }
 
-    public ShippingAddressViewModel(int id, String name, String phone, String address, int status, int imageUser) {
+    public ShippingAddressViewModel(int id, String firstName, String lastName, String phone, String address, int status) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.address = address;
         this.status = status;
-        this.imageUser = imageUser;
     }
 
     public int getId() {
@@ -29,12 +39,20 @@ public class ShippingAddressViewModel {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhone() {
@@ -59,14 +77,6 @@ public class ShippingAddressViewModel {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public int getImageUser() {
-        return imageUser;
-    }
-
-    public void setImageUser(int imageUser) {
-        this.imageUser = imageUser;
     }
 
     public boolean isChecked() {

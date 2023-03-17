@@ -1,5 +1,6 @@
 package com.example.bagmore.OrderScreen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,15 +16,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.DeliveryMethodRVAdapter;
+import com.example.bagmore.AuthScreen.LoginActivity;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Interfaces.IClickItemDeliveryMethod;
 import com.example.bagmore.Models.data.DeliveryMethodViewModel;
+import com.example.bagmore.Models.data.TokenRefreshViewModel;
+import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
+import com.example.bagmore.Models.json.response.JsonDeliveryRes;
+import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
 import com.example.bagmore.R;
+import com.example.bagmore.Repository.DeliveryMethodRepository;
+import com.example.bagmore.Repository.UserRepository;
+import com.example.bagmore.Services.DeliveryMethodService;
+import com.example.bagmore.Services.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DeliveryMethodActivity extends AppCompatActivity {
 
@@ -39,6 +52,10 @@ public class DeliveryMethodActivity extends AppCompatActivity {
 
     @BindView(R.id.swipe_rf_delivery)
     SwipeRefreshLayout rfDelivery;
+
+    UserService userService;
+
+    DeliveryMethodService deliveryMethodService;
     //endregion
 
     @Override
@@ -49,31 +66,35 @@ public class DeliveryMethodActivity extends AppCompatActivity {
 
         initUI();
         initToolbar();
-        setCallbackDeliveryItem();
+
+        getAllDeliveries();
         configBottomNavigation();
         onClickHandler();
 
-        layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(deliveryMethodRVAdapter);
-        recyclerView.setHasFixedSize(true);
+
     }
 
     //region set callback recycler view
-    private void setCallbackDeliveryItem() {
+    private void setCallbackDeliveryItem(List<DeliveryMethodViewModel> deliveries) {
         deliveryMethodRVAdapter = new DeliveryMethodRVAdapter(new IClickItemDeliveryMethod() {
             @Override
             public void onClickItemDelivery(DeliveryMethodViewModel viewModel) {
                 Toast.makeText(DeliveryMethodActivity.this, viewModel.getName() + "Selected", Toast.LENGTH_SHORT).show();
             }
         });
-        deliveryMethodRVAdapter.setData(getListDelivery());
+        deliveryMethodRVAdapter.setData(deliveries);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(deliveryMethodRVAdapter);
+        recyclerView.setHasFixedSize(true);
     }
     //endregion
 
     //region init ui
     private void initUI() {
         recyclerView = findViewById(R.id.rcv_delivery);
+        userService = UserRepository.getUserService();
+        deliveryMethodService = DeliveryMethodRepository.getDeliveryMethodService();
     }
     //endregion
 
@@ -131,18 +152,82 @@ public class DeliveryMethodActivity extends AppCompatActivity {
 
     //region onReFreshHandler
     private void onRefreshHandler() {
-        deliveryMethodRVAdapter.cleanData();
-        deliveryMethodRVAdapter.setData(getListDelivery());
+        getAllDeliveries();
+        deliveryMethodRVAdapter.notifyDataSetChanged();
         rfDelivery.setRefreshing(false);
     }
     //endregion
 
-    //region dummy data || call api here
-    private List<DeliveryMethodViewModel> getListDelivery() {
-        List<DeliveryMethodViewModel> list = new ArrayList<>();
-        list.add(new DeliveryMethodViewModel(1, "Standard Shipping", 0, "Shipping 4-6 working days", 1));
-        list.add(new DeliveryMethodViewModel(2, "Next day", 30, "Shipping 4-6 working days", 1));
-        return list;
+    //region call api get delivery method
+    private void getAllDeliveries() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            Call<JsonDeliveryRes> callGetDeliveries = deliveryMethodService.getDeliveries("bearer " + tokenManager.getAccessToken());
+            callGetDeliveries.enqueue(new Callback<JsonDeliveryRes>() {
+                @Override
+                public void onResponse(Call<JsonDeliveryRes> call, Response<JsonDeliveryRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonDeliveryRes data = response.body();
+                        setCallbackDeliveryItem(data.getData());
+                    } else if (response.code() == 401) {
+                        Toast.makeText(DeliveryMethodActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
+                        refreshTokenAPI();
+                    } else {
+                        Toast.makeText(DeliveryMethodActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonDeliveryRes> call, Throwable t) {
+                    Toast.makeText(DeliveryMethodActivity.this, "Failed to all API", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region refresh token
+    private void refreshTokenAPI() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            JsonRefreshTokenReq json = new JsonRefreshTokenReq(tokenManager.getAccessToken(), tokenManager.getRefreshToken());
+            Call<JsonRefreshTokenRes> result = userService.userRefreshToken(json);
+            result.enqueue(new Callback<JsonRefreshTokenRes>() {
+                @Override
+                public void onResponse(Call<JsonRefreshTokenRes> call, Response<JsonRefreshTokenRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonRefreshTokenRes jsonRefreshTokenResponse = response.body();
+                        TokenRefreshViewModel tokenRefresh = jsonRefreshTokenResponse.getData();
+                        tokenManager.clearToken();
+                        tokenManager.saveToken(tokenRefresh.getAccessToken(), tokenRefresh.getRefreshToken());
+                        getAllDeliveries();
+                    } else {
+                        tokenManager.clearToken();
+                        navigation();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonRefreshTokenRes> call, Throwable t) {
+                    Toast.makeText(DeliveryMethodActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region navigation
+    private void navigation() {
+        Intent intent = new Intent(DeliveryMethodActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     //endregion
 }

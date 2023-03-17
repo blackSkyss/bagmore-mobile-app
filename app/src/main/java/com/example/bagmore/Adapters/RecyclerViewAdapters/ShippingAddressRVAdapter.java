@@ -15,8 +15,6 @@ import com.example.bagmore.R;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class ShippingAddressRVAdapter extends RecyclerView.Adapter<ShippingAddressRVAdapter.MyViewHolder> {
 
     private List<ShippingAddressViewModel> shippings;
@@ -69,7 +67,6 @@ public class ShippingAddressRVAdapter extends RecyclerView.Adapter<ShippingAddre
 
 
         //define component of view holder
-        CircleImageView imageUser;
         TextView address, subtitle;
 
         ImageView checkShipping;
@@ -80,7 +77,6 @@ public class ShippingAddressRVAdapter extends RecyclerView.Adapter<ShippingAddre
             super(itemView);
             checkShipping = itemView.findViewById(R.id.check_shipping);
             itemShipping = itemView.findViewById(R.id.item_shipping);
-            imageUser = itemView.findViewById(R.id.img_user);
             address = itemView.findViewById(R.id.tv_address_sp);
             subtitle = itemView.findViewById(R.id.tv_subtitle_sp);
 
@@ -102,9 +98,8 @@ public class ShippingAddressRVAdapter extends RecyclerView.Adapter<ShippingAddre
             }
 
 
-            imageUser.setImageResource(nextSorting.getImageUser());
             address.setText(nextSorting.getAddress());
-            subtitle.setText(nextSorting.getName() + " - " + nextSorting.getPhone());
+            subtitle.setText(nextSorting.getFirstName() + " " + nextSorting.getLastName() + " - " + nextSorting.getPhone());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

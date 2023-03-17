@@ -18,16 +18,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ShippingAddressRVAdapter;
+import com.example.bagmore.AuthScreen.LoginActivity;
+import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Interfaces.IClickItemShippingAddress;
 import com.example.bagmore.Models.data.ShippingAddressViewModel;
+import com.example.bagmore.Models.data.TokenRefreshViewModel;
+import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
+import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
+import com.example.bagmore.Models.json.response.JsonShippingRes;
 import com.example.bagmore.R;
+import com.example.bagmore.Repository.ShippingAddressRepository;
+import com.example.bagmore.Repository.UserRepository;
+import com.example.bagmore.Services.ShippingAddressService;
+import com.example.bagmore.Services.UserService;
 import com.google.android.material.button.MaterialButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ShippingAddressActivity extends AppCompatActivity {
 
@@ -46,6 +58,10 @@ public class ShippingAddressActivity extends AppCompatActivity {
 
     @BindView(R.id.swipe_rf_shipping)
     SwipeRefreshLayout rfShipping;
+
+    UserService userService;
+
+    ShippingAddressService shippingAddressService;
     //endregion
 
     @Override
@@ -56,25 +72,26 @@ public class ShippingAddressActivity extends AppCompatActivity {
 
         initUI();
         initToolbar();
-        setCallbackShippingItem();
+
+        getAllShippings();
+
         configBottomNavigation();
         handlerClick();
-
-        layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(shippingAddressRVAdapter);
-        recyclerView.setHasFixedSize(true);
     }
 
     //region set callback recycler view
-    private void setCallbackShippingItem() {
+    private void setCallbackShippingItem(List<ShippingAddressViewModel> shippings) {
         shippingAddressRVAdapter = new ShippingAddressRVAdapter(new IClickItemShippingAddress() {
             @Override
             public void onClickItemShipping(ShippingAddressViewModel viewModel) {
                 Toast.makeText(ShippingAddressActivity.this, viewModel.getAddress() + "Selected", Toast.LENGTH_SHORT).show();
             }
         });
-        shippingAddressRVAdapter.setData(getData());
+        shippingAddressRVAdapter.setData(shippings);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(shippingAddressRVAdapter);
+        recyclerView.setHasFixedSize(true);
     }
     //endregion
 
@@ -82,6 +99,8 @@ public class ShippingAddressActivity extends AppCompatActivity {
     private void initUI() {
         mtAddShipping = findViewById(R.id.btn_create_address);
         recyclerView = findViewById(R.id.rcv_shipping);
+        userService = UserRepository.getUserService();
+        shippingAddressService = ShippingAddressRepository.getShippingAddressService();
     }
     //endregion
 
@@ -156,23 +175,82 @@ public class ShippingAddressActivity extends AppCompatActivity {
 
     //region onRefresh handler
     private void onRefreshHandler() {
-        List<ShippingAddressViewModel> list = getData();
-        list.add(new ShippingAddressViewModel(5, "Nettie Gordon", "741 848 9295", "406 Mihe Ridge, Baijeze", 1, R.drawable.img5));
-        shippingAddressRVAdapter.cleanData();
-        shippingAddressRVAdapter.setData(list);
+        getAllShippings();
+        shippingAddressRVAdapter.notifyDataSetChanged();
         rfShipping.setRefreshing(false);
     }
     //endregion
 
     //region dummy data || call api here
-    private List<ShippingAddressViewModel> getData() {
-        List<ShippingAddressViewModel> list = new ArrayList<>();
-        list.add(new ShippingAddressViewModel(1, "Francis Delgado", "755 707 1486", "57 Naci Terrace, Hunidpis", 1, R.drawable.img1));
-        list.add(new ShippingAddressViewModel(2, "Brian Griffin", "029 105 810", "21 Prince, Singapore, AR 719", 1, R.drawable.img2));
-        list.add(new ShippingAddressViewModel(3, "Roger Lyons", "472 471 1925", "142 Reda View, Ljpobdad", 1, R.drawable.img3));
-        list.add(new ShippingAddressViewModel(4, "Ricardo Higgins", "409 828 2536", "824 Kihoj Pike, Ickuhiw", 1, R.drawable.img4));
-        list.add(new ShippingAddressViewModel(5, "Nettie Gordon", "741 848 9295", "406 Mihe Ridge, Baijeze", 1, R.drawable.img5));
-        return list;
+    private void getAllShippings() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            Call<JsonShippingRes> callGetShippings = shippingAddressService.getShippings("bearer " + tokenManager.getAccessToken());
+            callGetShippings.enqueue(new Callback<JsonShippingRes>() {
+                @Override
+                public void onResponse(Call<JsonShippingRes> call, Response<JsonShippingRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonShippingRes jsonModel = response.body();
+                        setCallbackShippingItem(jsonModel.getData());
+                    } else if (response.code() == 401) {
+                        Toast.makeText(ShippingAddressActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
+                        refreshTokenAPI();
+                    } else {
+                        Toast.makeText(ShippingAddressActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonShippingRes> call, Throwable t) {
+                    Toast.makeText(ShippingAddressActivity.this, "Failed to all API", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region refresh token
+    private void refreshTokenAPI() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            JsonRefreshTokenReq json = new JsonRefreshTokenReq(tokenManager.getAccessToken(), tokenManager.getRefreshToken());
+            Call<JsonRefreshTokenRes> result = userService.userRefreshToken(json);
+            result.enqueue(new Callback<JsonRefreshTokenRes>() {
+                @Override
+                public void onResponse(Call<JsonRefreshTokenRes> call, Response<JsonRefreshTokenRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonRefreshTokenRes jsonRefreshTokenResponse = response.body();
+                        TokenRefreshViewModel tokenRefresh = jsonRefreshTokenResponse.getData();
+                        tokenManager.clearToken();
+                        tokenManager.saveToken(tokenRefresh.getAccessToken(), tokenRefresh.getRefreshToken());
+                        getAllShippings();
+                    } else {
+                        tokenManager.clearToken();
+                        navigation();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonRefreshTokenRes> call, Throwable t) {
+                    Toast.makeText(ShippingAddressActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region navigation
+    private void navigation() {
+        Intent intent = new Intent(ShippingAddressActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     //endregion
 }

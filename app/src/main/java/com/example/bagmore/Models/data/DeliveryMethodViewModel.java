@@ -1,22 +1,27 @@
 package com.example.bagmore.Models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 public class DeliveryMethodViewModel {
+
+    @SerializedName("id")
     private int id;
+    @SerializedName("name")
     private String name;
+    @SerializedName("price")
     private int price;
+    @SerializedName("description")
     private String description;
-    private int status;
     private boolean isChecked;
 
     public DeliveryMethodViewModel() {
     }
 
-    public DeliveryMethodViewModel(int id, String name, int price, String description, int status) {
+    public DeliveryMethodViewModel(int id, String name, int price, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
-        this.status = status;
     }
 
     public int getId() {
@@ -49,14 +54,6 @@ public class DeliveryMethodViewModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public boolean isChecked() {

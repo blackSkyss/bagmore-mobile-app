@@ -56,6 +56,8 @@ public class CartActivity extends AppCompatActivity {
     CartService cartService;
 
     WishListService wishListService;
+
+    private boolean acceptCheckout = false;
     //endregion
 
     @Override
@@ -142,6 +144,10 @@ public class CartActivity extends AppCompatActivity {
         titleBottomOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (acceptCheckout == false) {
+                    Toast.makeText(CartActivity.this, "Your cart is empty!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent i = new Intent(CartActivity.this, CheckoutActivity.class);
                 startActivityForResult(i, CODE);
             }
@@ -169,6 +175,7 @@ public class CartActivity extends AppCompatActivity {
             public void onResponse(Call<JsonCartRes> call, Response<JsonCartRes> response) {
                 if (response.isSuccessful()) {
                     JsonCartRes jsonModel = response.body();
+                    setTitleBottom(jsonModel.getData());
                     initTabView(jsonModel.getData(), null);
                 } else if (response.code() == 401) {
                     Toast.makeText(CartActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
@@ -177,6 +184,7 @@ public class CartActivity extends AppCompatActivity {
                     Toast.makeText(CartActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<JsonCartRes> call, Throwable t) {
                 Toast.makeText(CartActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
@@ -224,6 +232,22 @@ public class CartActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+    //endregion
+
+    //region set title bottom
+    private void setTitleBottom(List<CartViewModel> itemsCart) {
+        int total = 0;
+        for (CartViewModel item : itemsCart) {
+            total += (item.getPrice().intValue() * item.getAmount());
+        }
+        if (total == 0) {
+            acceptCheckout = false;
+            titleBottomOrder.setText("Nothing to checkout");
+        } else {
+            acceptCheckout = true;
+            titleBottomOrder.setText("Checkout \u25cf $" + total);
+        }
     }
     //endregion
 
