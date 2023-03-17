@@ -86,7 +86,6 @@ public class HomeActivity extends AppCompatActivity {
                         JsonProductViewModel jsonModel = response.body();
                         recyclerViewHomeAdapter.setData(jsonModel.getProductViewModels());
                         recyclerViewHomeAdapter.notifyDataSetChanged();
-                        Toast.makeText(HomeActivity.this, "Load success", Toast.LENGTH_SHORT).show();
                     } else if (response.code() == 401) {
                         Toast.makeText(HomeActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
                         refreshTokenAPI();
@@ -94,6 +93,7 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<JsonProductViewModel> call, Throwable t) {
                     Toast.makeText(HomeActivity.this, "Failed to all API", Toast.LENGTH_SHORT).show();

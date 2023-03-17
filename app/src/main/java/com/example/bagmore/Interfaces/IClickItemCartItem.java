@@ -1,9 +1,11 @@
 package com.example.bagmore.Interfaces;
 
+import com.example.bagmore.Models.data.CartViewModel;
 import com.example.bagmore.Models.data.ItemCartViewModel;
+import com.example.bagmore.OrderScreen.CartActivity;
 
 public interface IClickItemCartItem {
-    void handlerButtonClick(ItemCartViewModel viewModel);
+    void handlerButtonClick(CartViewModel viewModel);
 
-    void moveTo(ItemCartViewModel viewModel);
+    void moveTo(CartViewModel viewModel);
 }

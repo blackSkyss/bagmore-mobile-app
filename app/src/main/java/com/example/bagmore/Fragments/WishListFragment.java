@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ItemCartRVAdapter;
 import com.example.bagmore.Interfaces.IClickItemCartItem;
+import com.example.bagmore.Models.data.CartViewModel;
 import com.example.bagmore.Models.data.ItemCartViewModel;
 import com.example.bagmore.OrderScreen.CartActivity;
 import com.example.bagmore.R;
@@ -31,18 +32,18 @@ public class WishListFragment extends Fragment {
 
     private ItemCartRVAdapter itemWishRVAdapter;
 
-    private List<ItemCartViewModel> items;
+    private List<CartViewModel> items;
 
     @BindView(R.id.swipe_wish_list)
     SwipeRefreshLayout rfWishlist;
     //endregion
 
-    public WishListFragment(List<ItemCartViewModel> items) {
+    public WishListFragment(List<CartViewModel> items) {
         this.items = items;
     }
 
 
-    public static WishListFragment newInstance(String param1, String param2, List<ItemCartViewModel> items) {
+    public static WishListFragment newInstance(String param1, String param2, List<CartViewModel> items) {
         WishListFragment fragment = new WishListFragment(items);
         return fragment;
     }
@@ -84,12 +85,12 @@ public class WishListFragment extends Fragment {
     private void onCallbackHandler(View view) {
         itemWishRVAdapter = new ItemCartRVAdapter(new IClickItemCartItem() {
             @Override
-            public void handlerButtonClick(ItemCartViewModel viewModel) {
+            public void handlerButtonClick(CartViewModel viewModel) {
                 Toast.makeText(view.getContext(), "Remove item from wishlist", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void moveTo(ItemCartViewModel viewModel) {
+            public void moveTo(CartViewModel viewModel) {
                 Toast.makeText(view.getContext(), "Move to bag", Toast.LENGTH_SHORT).show();
             }
         }, "Move Bag", true, false);

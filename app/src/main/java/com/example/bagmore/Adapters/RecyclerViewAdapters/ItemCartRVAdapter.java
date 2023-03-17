@@ -1,5 +1,8 @@
 package com.example.bagmore.Adapters.RecyclerViewAdapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Interfaces.IClickItemCartItem;
-import com.example.bagmore.Models.data.ItemCartViewModel;
+import com.example.bagmore.Models.data.CartViewModel;
 import com.example.bagmore.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -19,7 +22,7 @@ import java.util.List;
 public class ItemCartRVAdapter extends RecyclerView.Adapter<ItemCartRVAdapter.MyViewHolder> {
 
 
-    private List<ItemCartViewModel> cartItems;
+    private List<CartViewModel> cartItems;
 
     private IClickItemCartItem clickItemCartItem;
 
@@ -37,12 +40,12 @@ public class ItemCartRVAdapter extends RecyclerView.Adapter<ItemCartRVAdapter.My
         this.isHaveBtn = isHaveBtn;
     }
 
-    public void setData(List<ItemCartViewModel> cartItems){
+    public void setData(List<CartViewModel> cartItems) {
         this.cartItems = cartItems;
         notifyDataSetChanged();
     }
 
-    public void cleanData(){
+    public void cleanData() {
         cartItems.clear();
         notifyDataSetChanged();
     }
@@ -57,7 +60,7 @@ public class ItemCartRVAdapter extends RecyclerView.Adapter<ItemCartRVAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final ItemCartViewModel itemCart = cartItems.get(position);
+        final CartViewModel itemCart = cartItems.get(position);
         if (itemCart == null) {
             return;
         }
@@ -70,10 +73,15 @@ public class ItemCartRVAdapter extends RecyclerView.Adapter<ItemCartRVAdapter.My
             holder.btnMove.setVisibility(View.INVISIBLE);
         }
 
-        holder.imgItem.setImageResource(itemCart.getImage());
-        holder.tvTitle.setText(itemCart.getName() + " X " + itemCart.getQuantity());
-        holder.tvSize.setText("Size: " + itemCart.getSize());
-        holder.tvColor.setText("Color:" + itemCart.getColor());
+
+        String image = itemCart.getProductImageViewModels().get(0).Source;
+        byte[] bytes = android.util.Base64.decode(image, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        holder.imgItem.setImageBitmap(bitmap);
+
+        holder.tvTitle.setText(itemCart.getProductName() + " X " + itemCart.getAmount());
+        holder.tvSize.setText("Size: " + itemCart.getSizeName());
+        holder.tvColor.setText("Color:" + itemCart.getColorName());
         holder.tvPrice.setText("$" + String.valueOf(itemCart.getPrice()));
         holder.btnMove.setText(titleButton);
         holder.btnMove.setOnClickListener(new View.OnClickListener() {

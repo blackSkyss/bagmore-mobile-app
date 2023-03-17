@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ItemCartRVAdapter;
 import com.example.bagmore.DetailActivity;
 import com.example.bagmore.Interfaces.IClickItemCartItem;
+import com.example.bagmore.Models.data.CartViewModel;
 import com.example.bagmore.Models.data.ItemCartViewModel;
 import com.example.bagmore.R;
 
@@ -29,7 +30,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private ItemCartRVAdapter itemCartRVAdapter;
 
-    private List<ItemCartViewModel> items;
+    private List<CartViewModel> items;
 
     @BindView(R.id.title_bottom_order)
     TextView total;
@@ -46,7 +47,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         configTextBottom();
 
 
-        items = (List<ItemCartViewModel>) getIntent().getExtras().get("object_listitem");
+        items = (List<CartViewModel>) getIntent().getExtras().get("object_listitem");
 
         rcvOrderDetail = findViewById(R.id.rcv_detail_order);
 
@@ -61,12 +62,12 @@ public class OrderDetailActivity extends AppCompatActivity {
     private void onCallbackHandler() {
         itemCartRVAdapter = new ItemCartRVAdapter(new IClickItemCartItem() {
             @Override
-            public void handlerButtonClick(ItemCartViewModel viewModel) {
+            public void handlerButtonClick(CartViewModel viewModel) {
 
             }
 
             @Override
-            public void moveTo(ItemCartViewModel viewModel) {
+            public void moveTo(CartViewModel viewModel) {
                 Intent intent = new Intent(OrderDetailActivity.this, DetailActivity.class);
                 startActivity(intent);
             }

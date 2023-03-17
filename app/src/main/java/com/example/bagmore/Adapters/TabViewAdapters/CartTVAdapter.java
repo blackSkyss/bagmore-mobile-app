@@ -10,16 +10,16 @@ import com.example.bagmore.Fragments.MyBagFragment;
 import com.example.bagmore.Fragments.WishListFragment;
 import com.example.bagmore.Fragments.cart.CartNothingFragment;
 import com.example.bagmore.Fragments.cart.WishlistNothingFragment;
-import com.example.bagmore.Models.data.ItemCartViewModel;
+import com.example.bagmore.Models.data.CartViewModel;
 
 import java.util.List;
 
 public class CartTVAdapter extends FragmentStatePagerAdapter {
 
-    private List<ItemCartViewModel> itemCarts;
-    private List<ItemCartViewModel> itemWishlists;
+    private List<CartViewModel> itemCarts;
+    private List<CartViewModel> itemWishlists;
 
-    public CartTVAdapter(@NonNull FragmentManager fm, int behavior, List<ItemCartViewModel> itemCarts, List<ItemCartViewModel> itemWishlists) {
+    public CartTVAdapter(@NonNull FragmentManager fm, int behavior, List<CartViewModel> itemCarts, List<CartViewModel> itemWishlists) {
         super(fm, behavior);
         this.itemCarts = itemCarts;
         this.itemWishlists = itemWishlists;
