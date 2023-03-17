@@ -10,15 +10,40 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.fragment.app.Fragment;
 
+import com.example.bagmore.DetailActivity;
+import com.example.bagmore.Helpers.TokenManager;
+import com.example.bagmore.Models.data.DescribeProductsViewModel;
 import com.example.bagmore.Models.data.ProductDetailViewModel;
+import com.example.bagmore.Models.data.TokenRefreshViewModel;
+import com.example.bagmore.Models.json.request.JsonAddToCartReq;
+import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
+import com.example.bagmore.Models.json.response.JsonLogoutRes;
+import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
 import com.example.bagmore.R;
+import com.example.bagmore.Repository.CartRepository;
+import com.example.bagmore.Repository.UserRepository;
+import com.example.bagmore.Services.CartService;
+import com.example.bagmore.Services.UserService;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class InformationFragment extends Fragment {
@@ -31,9 +56,27 @@ public class InformationFragment extends Fragment {
 
     TextView tvName, tvDescription;
     ProductDetailViewModel product;
+
+    private int productId = 0;
+    private int quantity = 1;
+
+    private int colorId = 1;
+    private int sizeId = 1;
+
+    private String colorName = "";
+
+    private String sizeName = "";
+
+    private boolean acceptAddToCart = false;
+
+    @BindView(R.id.title_bottom_order)
+    TextView titleOrder;
+
+    CartService cartService;
+
+    UserService userService;
     //endregion
 
-    private int quantity = 1;
 
     public InformationFragment(ProductDetailViewModel product) {
         this.product = product;
@@ -53,9 +96,10 @@ public class InformationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_information, container, false);
-
-
+        View view = inflater.inflate(R.layout.fragment_information, container, false);
+        ButterKnife.bind(this, view);
+        changeTitle(colorId, sizeId, quantity);
+        return view;
     }
 
     @Override
@@ -102,15 +146,18 @@ public class InformationFragment extends Fragment {
         rbp.setOnCheckedChangeListener(listener_rbp);
         rbbr.setOnCheckedChangeListener(listener_rbbr);
         //endregion
+
         edtQuantity.setText(String.valueOf(quantity));
 
-        //textView
-
-        /*textViewInfor = view.findViewById();*/
         handlerQuantity();
+
+        cartService = CartRepository.getCartService();
+        userService = UserRepository.getUserService();
+
+        addToCart();
+
     }
 
-    //region logic handler
 
     //region logic handler size
     // When size S is picked
@@ -123,8 +170,9 @@ public class InformationFragment extends Fragment {
                 rbL.setTextColor(Color.BLACK);
                 rbXL.setTextColor(Color.BLACK);
                 rbXXL.setTextColor(Color.BLACK);
+                sizeId = 1;
+                changeTitle(colorId, sizeId, quantity);
             }
-
         }
     };
 
@@ -138,6 +186,8 @@ public class InformationFragment extends Fragment {
                 rbL.setTextColor(Color.BLACK);
                 rbXL.setTextColor(Color.BLACK);
                 rbXXL.setTextColor(Color.BLACK);
+                sizeId = 2;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -153,6 +203,8 @@ public class InformationFragment extends Fragment {
                 rbL.setTextColor(Color.WHITE);
                 rbXL.setTextColor(Color.BLACK);
                 rbXXL.setTextColor(Color.BLACK);
+                sizeId = 3;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -168,6 +220,8 @@ public class InformationFragment extends Fragment {
                 rbL.setTextColor(Color.BLACK);
                 rbXL.setTextColor(Color.WHITE);
                 rbXXL.setTextColor(Color.BLACK);
+                sizeId = 4;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -183,6 +237,8 @@ public class InformationFragment extends Fragment {
                 rbL.setTextColor(Color.BLACK);
                 rbXL.setTextColor(Color.BLACK);
                 rbXXL.setTextColor(Color.WHITE);
+                sizeId = 5;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -200,6 +256,8 @@ public class InformationFragment extends Fragment {
                 rbr.setTextColor(getResources().getColor(R.color.red));
                 rbp.setTextColor(getResources().getColor(R.color.pink));
                 rbbr.setTextColor(getResources().getColor(R.color.brown));
+                colorId = 1;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -215,6 +273,8 @@ public class InformationFragment extends Fragment {
                 rbr.setTextColor(getResources().getColor(R.color.red));
                 rbp.setTextColor(getResources().getColor(R.color.pink));
                 rbbr.setTextColor(getResources().getColor(R.color.brown));
+                colorId = 2;
+                changeTitle(colorId, sizeId, quantity);
 
             }
 
@@ -230,6 +290,8 @@ public class InformationFragment extends Fragment {
                 rbr.setTextColor(getResources().getColor(R.color.white));
                 rbp.setTextColor(getResources().getColor(R.color.pink));
                 rbbr.setTextColor(getResources().getColor(R.color.brown));
+                colorId = 3;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -244,6 +306,8 @@ public class InformationFragment extends Fragment {
                 rbr.setTextColor(getResources().getColor(R.color.red));
                 rbp.setTextColor(getResources().getColor(R.color.white));
                 rbbr.setTextColor(getResources().getColor(R.color.brown));
+                colorId = 4;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -258,6 +322,8 @@ public class InformationFragment extends Fragment {
                 rbr.setTextColor(getResources().getColor(R.color.red));
                 rbp.setTextColor(getResources().getColor(R.color.pink));
                 rbbr.setTextColor(getResources().getColor(R.color.white));
+                colorId = 5;
+                changeTitle(colorId, sizeId, quantity);
             }
 
         }
@@ -278,6 +344,7 @@ public class InformationFragment extends Fragment {
                 }
                 quantity -= 1;
                 edtQuantity.setText(String.valueOf(quantity));
+                changeTitle(colorId, sizeId, quantity);
             }
         });
 
@@ -290,6 +357,7 @@ public class InformationFragment extends Fragment {
                     btnMinus.setEnabled(true);
                 }
                 edtQuantity.setText(String.valueOf(quantity));
+                changeTitle(colorId, sizeId, quantity);
             }
         });
 
@@ -307,6 +375,7 @@ public class InformationFragment extends Fragment {
                     quantity = 1;
                     btnMinus.setEnabled(false);
                     edtQuantity.setText(String.valueOf(quantity));
+                    changeTitle(colorId, sizeId, quantity);
                 }
 
                 quantity = Integer.parseInt(edtQuantity.getText().toString().trim());
@@ -327,5 +396,146 @@ public class InformationFragment extends Fragment {
     }
     //endregion
 
+    //region check color and size
+    private boolean checkDescription(int idColor, int idSize) {
+        for (DescribeProductsViewModel item : product.getDescribeProducts()) {
+            if (item.Color.getId() == idColor && item.Size.getId() == idSize) {
+                return true;
+            }
+        }
+        return false;
+    }
     //endregion
+
+    //region get price of size and color
+    private BigDecimal getPrice(int idColor, int idSize) {
+        for (DescribeProductsViewModel item : product.getDescribeProducts()) {
+            if (item.Color.getId() == idColor && item.Size.getId() == idSize) {
+                return item.getPrice();
+            }
+        }
+        return BigDecimal.valueOf(0);
+    }
+    //endregion
+
+    //region change title add to cart
+    private void changeTitle(int colorId, int sizeId, int quantity) {
+        if (checkDescription(colorId, sizeId) == false) {
+            acceptAddToCart = false;
+            titleOrder.setText("Out of stock");
+        } else {
+            acceptAddToCart = true;
+            BigDecimal total = BigDecimal.valueOf(Double.valueOf(quantity + ""));
+            BigDecimal result = total.multiply(getPrice(colorId, sizeId));
+            titleOrder.setText("Add \u25cf " + "$" + result.intValue());
+        }
+    }
+    //endregion
+
+    //region handler add to cart
+    private void addToCart() {
+        titleOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToCartAPI();
+            }
+        });
+    }
+    //endregion
+
+    //region get name color and size
+    private void setNameColorSize(int colorId, int sizeId) {
+        for (DescribeProductsViewModel item : product.getDescribeProducts()) {
+            if (item.Color.getId() == colorId && item.Size.getId() == sizeId) {
+                colorName = item.Color.getName();
+                sizeName = item.Size.getName();
+            }
+        }
+    }
+    //endregion
+
+    //region call add to cart API
+    private void addToCartAPI() {
+        if (acceptAddToCart == false) {
+            return;
+        } else {
+            setNameColorSize(colorId, sizeId);
+            try {
+                TokenManager tokenManager = new TokenManager(getContext());
+                productId = product.getId();
+                JsonAddToCartReq model = new JsonAddToCartReq(productId, colorName, quantity, sizeName);
+                Call<JsonLogoutRes> callAddToCart = cartService.addToCart("bearer " + tokenManager.getAccessToken(), model);
+                callAddToCart.enqueue(new Callback<JsonLogoutRes>() {
+                    @Override
+                    public void onResponse(Call<JsonLogoutRes> call, Response<JsonLogoutRes> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), "Add successfully", Toast.LENGTH_SHORT).show();
+                        } else if (response.code() == 401) {
+                            Toast.makeText(getContext(), "ReAuthentication", Toast.LENGTH_SHORT).show();
+                            refreshTokenAPI();
+                        } else {
+                            ResponseBody errorBody = response.errorBody();
+                            if (errorBody != null) {
+                                try {
+                                    String errorString = errorBody.string();
+                                    Gson gson = new Gson();
+                                    JsonObject errorJson = gson.fromJson(errorString, JsonObject.class);
+                                    JsonLogoutRes jsonLogoutRes = gson.fromJson(errorJson, JsonLogoutRes.class);
+                                    Toast.makeText(getContext(), jsonLogoutRes.getMessage(), Toast.LENGTH_SHORT).show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonLogoutRes> call, Throwable t) {
+                        Toast.makeText(getContext(), "Failed to all API", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    //endregion
+
+    //region refresh token
+    private void refreshTokenAPI() {
+        try {
+            TokenManager tokenManager = new TokenManager(getContext());
+            JsonRefreshTokenReq json = new JsonRefreshTokenReq(tokenManager.getAccessToken(), tokenManager.getRefreshToken());
+            Call<JsonRefreshTokenRes> result = userService.userRefreshToken(json);
+            result.enqueue(new Callback<JsonRefreshTokenRes>() {
+                @Override
+                public void onResponse(Call<JsonRefreshTokenRes> call, Response<JsonRefreshTokenRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonRefreshTokenRes jsonRefreshTokenResponse = response.body();
+                        TokenRefreshViewModel tokenRefresh = jsonRefreshTokenResponse.getData();
+                        tokenManager.clearToken();
+                        tokenManager.saveToken(tokenRefresh.getAccessToken(), tokenRefresh.getRefreshToken());
+                        addToCartAPI();
+                    } else {
+                        tokenManager.clearToken();
+                        if (getActivity() instanceof DetailActivity) {
+                            DetailActivity activity = (DetailActivity) getActivity();
+                            activity.navigation();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonRefreshTokenRes> call, Throwable t) {
+                    Toast.makeText(getContext(), "Failed to call API", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
 }

@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +53,6 @@ public class DetailActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ProductHomeTVAdapter mViewPagerAdapter;
     private MaterialButton btnCart;
-    private Button btnAddToCart;
     ProductService productService;
 
     UserService userService;
@@ -75,7 +73,6 @@ public class DetailActivity extends AppCompatActivity {
         initToolbar();
 
         btnCart = findViewById(R.id.btn_cart);
-        btnAddToCart = findViewById(R.id.btn_add_cart);
         mtabLayout = findViewById(R.id.tab_layout);
         mViewPager = findViewById(R.id.view_page);
         productService = ProductRepository.getProductService();
@@ -99,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     JsonProductDetailRes jsonModel = response.body();
 
-                    List<String> imageString = null;
+                    List<String> imageString = new ArrayList<>();
                     List<ProductImageViewModel> listImage = response.body().getData().ProductImages;
                     for (ProductImageViewModel image : listImage) {
                         imageString.add(image.Source);
@@ -219,13 +216,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        // add current product to cart
-        btnAddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DetailActivity.this, "Add to cart", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
     //endregion
 
@@ -263,7 +253,7 @@ public class DetailActivity extends AppCompatActivity {
     //endregion
 
     //region navigation
-    private void navigation() {
+    public void navigation() {
         Intent intent = new Intent(DetailActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

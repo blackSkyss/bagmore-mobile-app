@@ -102,35 +102,5 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/black"
-        android:gravity="center_horizontal">
-
-
-        <Button
-            android:id="@+id/btn_add_cart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:fontFamily="@font/dmsans_regular"
-            android:text="ADD TO Cart \u25CF $200">
-
-        </Button>
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:layout_width="100dp"
-        android:layout_height="4dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/shape_button">
-
-    </LinearLayout>
 
 </RelativeLayout>
