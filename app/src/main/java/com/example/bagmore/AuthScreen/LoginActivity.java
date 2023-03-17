@@ -135,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                         TokenViewModel token = data.getData();
                         TokenManager tokenManager = new TokenManager(getApplicationContext());
                         tokenManager.saveToken(token.getAccessToken(), token.getRefreshToken());
-                        Toast.makeText(LoginActivity.this, token.getRefreshToken(), Toast.LENGTH_SHORT).show();
                         navigation();
                     } else {
                         Dialog.showDialog(LoginActivity.this, "Login execution", "Account does not exist");

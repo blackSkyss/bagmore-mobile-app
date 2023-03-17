@@ -23,18 +23,14 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:titleEnabled="false">
 
-                <com.denzcoskun.imageslider.ImageSlider
-                    android:paddingBottom="45dp"
-                    android:id="@+id/img_slider"
+                <ImageView
+                    android:id="@+id/img_slide"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:iss_auto_cycle="true"
-                    app:iss_delay="0"
-                    app:iss_error_image="@color/purple_700"
-                    app:iss_period="3000"
-                    app:iss_placeholder="@color/black">
+                    android:paddingTop="45dp">
 
-                </com.denzcoskun.imageslider.ImageSlider>
+                </ImageView>
+
 
                 <View
                     android:layout_width="match_parent"

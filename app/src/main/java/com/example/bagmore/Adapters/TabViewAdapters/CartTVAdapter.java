@@ -32,13 +32,21 @@ public class CartTVAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 1:
                 if (itemWishlists != null) {
-                    return new WishListFragment(itemWishlists);
+                    if (itemWishlists.size() > 0) {
+                        return new WishListFragment(itemWishlists);
+                    } else {
+                        return new WishlistNothingFragment();
+                    }
                 } else {
                     return new WishlistNothingFragment();
                 }
             default:
                 if (itemCarts != null) {
-                    return new MyBagFragment(itemCarts);
+                    if (itemCarts.size() > 0)
+                        return new MyBagFragment(itemCarts);
+                    else {
+                        return new CartNothingFragment();
+                    }
                 } else {
                     return new CartNothingFragment();
                 }

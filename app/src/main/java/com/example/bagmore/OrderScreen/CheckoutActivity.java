@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.bagmore.AuthScreen.LoginActivity;
+import com.example.bagmore.DeliveryActivity;
 import com.example.bagmore.HandlerException.Dialog;
 import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.TokenRefreshViewModel;
@@ -28,9 +29,14 @@ import com.example.bagmore.Repository.OrderRepository;
 import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.Services.OrderService;
 import com.example.bagmore.Services.UserService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -207,13 +213,24 @@ public class CheckoutActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         Toast.makeText(CheckoutActivity.this, "Checkout successfully", Toast.LENGTH_SHORT).show();
                         finish();
-                        Intent intent = new Intent(CheckoutActivity.this, DeliveryMethodActivity.class);
+                        Intent intent = new Intent(CheckoutActivity.this, DeliveryActivity.class);
                         startActivity(intent);
                     } else if (response.code() == 401) {
                         Toast.makeText(CheckoutActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
                         refreshTokenAPI();
                     } else {
-                        Toast.makeText(CheckoutActivity.this, "Load failed", Toast.LENGTH_SHORT).show();
+                        ResponseBody errorBody = response.errorBody();
+                        if (errorBody != null) {
+                            try {
+                                String errorString = errorBody.string();
+                                Gson gson = new Gson();
+                                JsonObject errorJson = gson.fromJson(errorString, JsonObject.class);
+                                JsonLogoutRes jsonLogoutRes = gson.fromJson(errorJson, JsonLogoutRes.class);
+                                Toast.makeText(CheckoutActivity.this, jsonLogoutRes.getMessage(), Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
 

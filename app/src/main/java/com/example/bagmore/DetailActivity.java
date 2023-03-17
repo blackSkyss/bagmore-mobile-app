@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,13 +19,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.viewpager.widget.ViewPager;
 
-import com.denzcoskun.imageslider.ImageSlider;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.bagmore.Adapters.TabViewAdapters.ProductHomeTVAdapter;
 import com.example.bagmore.AuthScreen.LoginActivity;
 import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.ProductDetailViewModel;
-import com.example.bagmore.Models.data.ProductImageViewModel;
 import com.example.bagmore.Models.data.TokenRefreshViewModel;
 import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
 import com.example.bagmore.Models.json.response.JsonProductDetailRes;
@@ -36,11 +35,6 @@ import com.example.bagmore.Services.UserService;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
-
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
     UserService userService;
     private int productId;
 
-    ImageSlider imageSlider;
+    ImageView imageSlider;
     //endregion
 
     @Override
@@ -67,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         userService = UserRepository.getUserService();
-        imageSlider = findViewById(R.id.img_slider);
+        imageSlider = findViewById(R.id.img_slide);
 
         // init and config tool bar
         initToolbar();
@@ -96,15 +90,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     JsonProductDetailRes jsonModel = response.body();
 
-                    List<String> imageString = new ArrayList<>();
-                    List<ProductImageViewModel> listImage = response.body().getData().ProductImages;
-                    for (ProductImageViewModel image : listImage) {
-                        imageString.add(image.Source);
-                    }
-                    if (imageString != null) {
-                        initSlide(imageString);
-                    }
-
+                    initSlide(jsonModel.getData().getProductImages().get(0).Source);
                     intiTabBar(jsonModel.getData());
 
                 } else if (response.code() == 401) {
@@ -124,32 +110,10 @@ public class DetailActivity extends AppCompatActivity {
     //endregion
 
     //region init image slide
-    private void initSlide(List<String> imageList) {
-        List<SlideModel> slideModels = new ArrayList<>();
-
-        for (String image : imageList) {
-            try {
-
-                byte[] slideData = image.getBytes("UTF-8");
-
-                // Create a ByteArrayInputStream from the byte array
-                ByteArrayInputStream bis = new ByteArrayInputStream(slideData);
-
-                // Create an ObjectInputStream to deserialize the byte stream
-                ObjectInputStream ois = new ObjectInputStream(bis);
-
-                // Deserialize the byte stream into a SlideModel object
-                SlideModel slideModel = (SlideModel) ois.readObject();
-
-                // Add the SlideModel object to the list
-                slideModels.add(slideModel);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        // binding image to slider
-        imageSlider.setImageList(slideModels);
+    private void initSlide(String image) {
+        byte[] bytes = android.util.Base64.decode(image, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        imageSlider.setImageBitmap(bitmap);
     }
     //endregion
 

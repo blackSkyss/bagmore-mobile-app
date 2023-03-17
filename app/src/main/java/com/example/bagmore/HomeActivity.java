@@ -120,12 +120,12 @@ public class HomeActivity extends AppCompatActivity {
             // add product to wish list
             @Override
             public void OnClickAddFavoriteButton(ProductViewModel product) {
-                Toast.makeText(HomeActivity.this, "Add to wish list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void OnClickRemoveFavoriteButton(ProductViewModel product) {
-                Toast.makeText(HomeActivity.this, "Remove from wish list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -160,8 +160,9 @@ public class HomeActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-                startActivity(intent);
+                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+               // Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+               // startActivity(intent);
             }
         });
 
@@ -169,8 +170,9 @@ public class HomeActivity extends AppCompatActivity {
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, SortActivity.class);
-                startActivity(intent);
+                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+              // Intent intent = new Intent(HomeActivity.this, SortActivity.class);
+              //  startActivity(intent);
             }
         });
 
@@ -178,8 +180,9 @@ public class HomeActivity extends AppCompatActivity {
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, FilterActivity.class);
-                startActivity(intent);
+                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+               // Intent intent = new Intent(HomeActivity.this, FilterActivity.class);
+               // startActivity(intent);
             }
         });
 

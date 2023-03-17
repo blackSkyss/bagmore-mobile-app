@@ -457,6 +457,7 @@ public class InformationFragment extends Fragment {
     //region call add to cart API
     private void addToCartAPI() {
         if (acceptAddToCart == false) {
+            Toast.makeText(getContext(), "Out of stock", Toast.LENGTH_SHORT).show();
             return;
         } else {
             setNameColorSize(colorId, sizeId);

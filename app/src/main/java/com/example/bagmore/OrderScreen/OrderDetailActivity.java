@@ -47,17 +47,13 @@ public class OrderDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initToolbar();
-        configTextBottom();
 
 
         itemOrders = (List<OrderItemViewModel>) getIntent().getExtras().get("object_listitem");
         rcvOrderDetail = findViewById(R.id.rcv_detail_order);
 
         onCallbackHandler(itemOrders);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        rcvOrderDetail.setLayoutManager(linearLayoutManager);
-        rcvOrderDetail.setAdapter(itemCartRVAdapter);
+        configTextBottom();
     }
 
     //region callback handler
@@ -70,13 +66,18 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             @Override
             public void moveTo(CartViewModel viewModel) {
+
                 Intent intent = new Intent(OrderDetailActivity.this, DetailActivity.class);
+                intent.putExtra("product", viewModel.getProductId());
                 startActivity(intent);
             }
         }, "Detail", false, true);
 
         itemCarts = convertToCartViewModel(items);
         itemCartRVAdapter.setData(itemCarts);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        rcvOrderDetail.setLayoutManager(linearLayoutManager);
+        rcvOrderDetail.setAdapter(itemCartRVAdapter);
     }
     //endregion
 
@@ -93,6 +94,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                     itemOrder.getColorName(),
                     itemOrder.getSizeName(),
                     itemOrder.getProductsImage());
+            itemCarts.add(itemCart);
         }
         return itemCarts;
     }
@@ -127,7 +129,18 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     //region config text bottom
     private void configTextBottom() {
-        total.setText("TOTAL \u25cf $300");
+        total.setText("TOTAL \u25cf $" + getTotalAmount());
     }
     //endregion
+
+    //region get total amount
+    private int getTotalAmount() {
+        int total = 0;
+        for (CartViewModel item : itemCarts) {
+            total += item.getAmount() * item.getPrice().intValue();
+        }
+        return total;
+    }
+    //endregion
+
 }

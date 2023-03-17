@@ -147,7 +147,8 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (acceptCheckout == false) {
-                    Toast.makeText(CartActivity.this, "Your cart is empty!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CartActivity.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
+                    titleBottomOrder.setText("Nothing to checkout");
                     return;
                 }
 
