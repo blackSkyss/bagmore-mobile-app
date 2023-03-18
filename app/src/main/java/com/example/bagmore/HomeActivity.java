@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialButton btnSort, btnFilter, btnHome, btnNotification, btnDiscovery, btnShop, btnAccount;
     @BindView(R.id.swipe_rf_product)
     SwipeRefreshLayout rfProduct;
-
+    String email;
     UserService userService;
     //endregion
 
@@ -70,6 +70,9 @@ public class HomeActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(recyclerViewHomeAdapter);
         recyclerView.setHasFixedSize(true);
+
+        Intent intent = getIntent();
+        email = (String) intent.getSerializableExtra("email");
 
     }
 
@@ -224,6 +227,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, ProfileOverallActivity.class);
+                intent.putExtra("email", email);
                 startActivity(intent);
             }
         });

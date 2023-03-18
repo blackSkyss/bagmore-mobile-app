@@ -12,12 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.bagmore.DetailActivity;
 import com.example.bagmore.HandlerException.Dialog;
 import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.HomeActivity;
 import com.example.bagmore.Models.data.TokenViewModel;
 import com.example.bagmore.Models.json.request.JsonUserLoginReq;
 import com.example.bagmore.Models.json.response.JsonLoginRes;
+import com.example.bagmore.ProfileScreen.ProfileInformationActivity;
 import com.example.bagmore.R;
 import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.Services.UserService;
@@ -136,7 +138,10 @@ public class LoginActivity extends AppCompatActivity {
                         TokenManager tokenManager = new TokenManager(getApplicationContext());
                         tokenManager.saveToken(token.getAccessToken(), token.getRefreshToken());
                         Toast.makeText(LoginActivity.this, token.getRefreshToken(), Toast.LENGTH_SHORT).show();
-                        navigation();
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        intent.putExtra("email", data.getEmail());
+                        startActivity(intent);
+                        //navigation();
                     } else {
                         Dialog.showDialog(LoginActivity.this, "Login execution", "Account does not exist");
                     }
