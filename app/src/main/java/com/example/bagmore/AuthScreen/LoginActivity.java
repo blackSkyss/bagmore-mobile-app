@@ -136,6 +136,11 @@ public class LoginActivity extends AppCompatActivity {
                         TokenManager tokenManager = new TokenManager(getApplicationContext());
                         tokenManager.saveToken(token.getAccessToken(), token.getRefreshToken());
                         navigation();
+                        Toast.makeText(LoginActivity.this, token.getRefreshToken(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        intent.putExtra("email", data.getEmail());
+                        startActivity(intent);
+                        //navigation();
                     } else {
                         Dialog.showDialog(LoginActivity.this, "Login execution", "Account does not exist");
                     }

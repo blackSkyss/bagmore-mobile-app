@@ -59,6 +59,7 @@ public class ProfileOverallActivity extends AppCompatActivity {
     MaterialButton btnAccount;
 
     private UserService userService;
+    String email;
 
     //endregion
     @Override
@@ -73,6 +74,9 @@ public class ProfileOverallActivity extends AppCompatActivity {
         onClickHandler();
 
         initToolbar();
+
+        Intent intent = getIntent();
+         email = (String) intent.getSerializableExtra("email");
     }
 
     //region init toolbar
@@ -109,7 +113,9 @@ public class ProfileOverallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileOverallActivity.this, ProfileInformationActivity.class);
+                intent.putExtra("email", email);
                 startActivity(intent);
+
             }
         });
 
