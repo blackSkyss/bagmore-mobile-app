@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -78,6 +79,8 @@ public class CanceledFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         rcvCanceled.setLayoutManager(linearLayoutManager);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        rcvCanceled.addItemDecoration(itemDecoration);
         rcvCanceled.setAdapter(orderRVAdapter);
         rfCanceled.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

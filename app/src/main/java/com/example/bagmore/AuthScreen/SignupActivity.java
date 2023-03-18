@@ -322,7 +322,6 @@ public class SignupActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Toast.makeText(SignupActivity.this, "Sign up successfully", Toast.LENGTH_SHORT).show();
                     navigation();
-
                 }
 
                 if (response.code() == 400) {

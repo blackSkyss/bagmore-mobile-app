@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bd_bt_item_checkout"
     android:padding="10dp">
 
     <TextView

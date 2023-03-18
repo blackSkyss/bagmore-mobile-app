@@ -27,14 +27,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
-import com.example.bagmore.AuthScreen.SignupActivity;
+import com.example.bagmore.AuthScreen.LoginActivity;
 import com.example.bagmore.Helpers.RealPathUtil;
-import com.example.bagmore.HomeActivity;
-import com.example.bagmore.Models.data.UserProfileViewModel;
+import com.example.bagmore.Helpers.TokenManager;
+import com.example.bagmore.Models.data.TokenRefreshViewModel;
+import com.example.bagmore.Models.json.request.JsonRefreshTokenReq;
 import com.example.bagmore.Models.json.request.JsonUpdateProfileReq;
 import com.example.bagmore.Models.json.response.JsonLogoutRes;
-import com.example.bagmore.Models.json.response.JsonProductViewModel;
+import com.example.bagmore.Models.json.response.JsonRefreshTokenRes;
 import com.example.bagmore.Models.json.response.JsonUpdateProfileRes;
 import com.example.bagmore.Models.json.response.JsonUserProfileRes;
 import com.example.bagmore.R;
@@ -53,9 +53,6 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,12 +61,8 @@ import retrofit2.Response;
 public class ProfileInformationActivity extends AppCompatActivity {
 
 
-
-
-
     public ProfileInformationActivity() {
     }
-
 
 
     private static final int PICK_IMAGE_REQUEST_CODE = 10;
@@ -182,7 +175,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 if (check) {
                     UpdateUserAPI();
                     disableUpdateMode();
-                   /* Toast.makeText(ProfileInformationActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();*/
+                    /* Toast.makeText(ProfileInformationActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();*/
                 }
                 return;
             }
@@ -259,6 +252,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
         datePickerDialog.show();
     }
+
     //endregion
     private void checkPermission() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -274,33 +268,35 @@ public class ProfileInformationActivity extends AppCompatActivity {
     }
 
 
-    private void GetUserByEmail(){
+    private void GetUserByEmail() {
         Call<JsonUserProfileRes> callGetUser = userService.getUserByEmail(email);
         callGetUser.enqueue(new Callback<JsonUserProfileRes>() {
             @Override
             public void onResponse(Call<JsonUserProfileRes> call, Response<JsonUserProfileRes> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     JsonUserProfileRes json = response.body();
-                    tvFullname.setText(json.getData().FirstName +" "+ json.getData().LastName);
-                   edtFirstName.setText(json.getData().FirstName);
-                   edtLastName.setText(json.getData().LastName);
-                   edtBirthday.setText(String.format(json.getData().BirthDay.substring(0, 10)));
-                   edtAddress1.setText(json.getData().FirstAddress);
-                   edtAddress2.setText(json.getData().SecondAddress);
-                   edtPhone.setText(json.getData().Phone);
+                    tvFullname.setText(json.getData().FirstName + " " + json.getData().LastName);
+                    edtFirstName.setText(json.getData().FirstName);
+                    edtLastName.setText(json.getData().LastName);
+                    edtBirthday.setText(String.format(json.getData().BirthDay.substring(0, 10)));
+                    edtAddress1.setText(json.getData().FirstAddress);
+                    edtAddress2.setText(json.getData().SecondAddress);
+                    edtPhone.setText(json.getData().Phone);
                     byte[] bytes = android.util.Base64.decode(json.getData().Avatar, Base64.DEFAULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     imgAvatar.setImageBitmap(bitmap);
-                }else{
+                } else {
                     Toast.makeText(ProfileInformationActivity.this, "Call fail", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<JsonUserProfileRes> call, Throwable t) {
                 Toast.makeText(ProfileInformationActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void UpdateUserAPI() {
 
         String strFname = edtFirstName.getText().toString().trim();
@@ -310,15 +306,9 @@ public class ProfileInformationActivity extends AppCompatActivity {
         String strAddress1 = edtAddress1.getText().toString().trim();
         String strAddress2 = edtAddress2.getText().toString().trim();
 
-       /* RequestBody requestBodyFname = RequestBody.create(MediaType.parse("multipart/form-data"), strFname);
-        RequestBody requestBodyLname = RequestBody.create(MediaType.parse("multipart/form-data"), strLname);
-        RequestBody requestBodyBirthday = RequestBody.create(MediaType.parse("multipart/form-data"), strBirthday);
-        RequestBody requestBodyPhone = RequestBody.create(MediaType.parse("multipart/form-data"), strPhone);
-        RequestBody requestBodyAddress1 = RequestBody.create(MediaType.parse("multipart/form-data"), strAddress1);
-        RequestBody requestBodyAddress2 = RequestBody.create(MediaType.parse("multipart/form-data"), strAddress2);*/
 
         Call<JsonUpdateProfileRes> result;
-
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
         if (filePath != null) {
             String strRealPath = RealPathUtil.getRealPath(this, filePath);
             Log.e("BagMore", strRealPath);
@@ -327,26 +317,24 @@ public class ProfileInformationActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.PNG, 100, baos); // bm is the bitmap object
             byte[] b = baos.toByteArray();
-            String  encodedString = Base64.encodeToString(b, Base64.DEFAULT);
+            String encodedString = Base64.encodeToString(b, Base64.DEFAULT);
             JsonUpdateProfileReq js = new JsonUpdateProfileReq(strFname, strLname, strBirthday, strPhone, strAddress1, strAddress2, encodedString);
 
 
-            result = userService.updateUserProfile(email,js);
+            result = userService.updateUserProfile("bearer " + tokenManager.getAccessToken(), email, js);
         } else {
             JsonUpdateProfileReq js = new JsonUpdateProfileReq(strFname, strLname, strBirthday, strPhone, strAddress1, strAddress2, null);
-            result = userService.updateUserProfile(email,js);
+            result = userService.updateUserProfile("bearer " + tokenManager.getAccessToken(), email, js);
         }
         result.enqueue(new Callback<JsonUpdateProfileRes>() {
             @Override
             public void onResponse(Call<JsonUpdateProfileRes> call, Response<JsonUpdateProfileRes> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(ProfileInformationActivity.this, "update successfully", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(ProfileInformationActivity.this, "update fail", Toast.LENGTH_SHORT).show();
-
-                }
-
-                /*if (response.code() == 400) {
+                } else if (response.code() == 401) {
+                    Toast.makeText(ProfileInformationActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
+                    refreshTokenAPI();
+                } else {
                     ResponseBody errorBody = response.errorBody();
                     if (errorBody != null) {
                         try {
@@ -354,12 +342,12 @@ public class ProfileInformationActivity extends AppCompatActivity {
                             Gson gson = new Gson();
                             JsonObject errorJson = gson.fromJson(errorString, JsonObject.class);
                             JsonLogoutRes jsonLogoutRes = gson.fromJson(errorJson, JsonLogoutRes.class);
-                            edtEmail.setError(jsonLogoutRes.getMessage());
+                            Toast.makeText(ProfileInformationActivity.this, jsonLogoutRes.getMessage(), Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
-                }*/
+                }
             }
 
             @Override
@@ -417,6 +405,48 @@ public class ProfileInformationActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+    //endregion
+
+    //region refresh token
+    private void refreshTokenAPI() {
+        try {
+            TokenManager tokenManager = new TokenManager(getApplicationContext());
+            JsonRefreshTokenReq json = new JsonRefreshTokenReq(tokenManager.getAccessToken(), tokenManager.getRefreshToken());
+            Call<JsonRefreshTokenRes> result = userService.userRefreshToken(json);
+            result.enqueue(new Callback<JsonRefreshTokenRes>() {
+                @Override
+                public void onResponse(Call<JsonRefreshTokenRes> call, Response<JsonRefreshTokenRes> response) {
+                    if (response.isSuccessful()) {
+                        JsonRefreshTokenRes jsonRefreshTokenResponse = response.body();
+                        TokenRefreshViewModel tokenRefresh = jsonRefreshTokenResponse.getData();
+                        tokenManager.clearToken();
+                        tokenManager.saveToken(tokenRefresh.getAccessToken(), tokenRefresh.getRefreshToken());
+                        UpdateUserAPI();
+                    } else {
+                        tokenManager.clearToken();
+                        navigation();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonRefreshTokenRes> call, Throwable t) {
+                    Toast.makeText(ProfileInformationActivity.this, "Failed to call API", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region navigation
+    public void navigation() {
+        Intent intent = new Intent(ProfileInformationActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     //endregion
 }

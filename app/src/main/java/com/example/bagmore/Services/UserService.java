@@ -51,7 +51,7 @@ public interface UserService {
 
 
     @PUT("user/User/Update/{userEmail}")
-    Call<JsonUpdateProfileRes> updateUserProfile(@Path("userEmail") String email,
+    Call<JsonUpdateProfileRes> updateUserProfile(@Header(ApiClient.AUTH_HEADER) String accessToken,  @Path("userEmail") String email,
                                                  @Body JsonUpdateProfileReq json);
 
     @GET("user/User/Get/{email}")

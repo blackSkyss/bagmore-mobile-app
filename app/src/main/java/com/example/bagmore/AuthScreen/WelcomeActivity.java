@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,13 +31,13 @@ public class WelcomeActivity extends AppCompatActivity {
         btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Chuyen den trang dang nhap voi google
+                Toast.makeText(WelcomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
             }
         });
         btn_facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Chuyen den trang dang nhap voi Facebook
+                Toast.makeText(WelcomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
             }
         });
         btn_sign_up_email.setOnClickListener(new View.OnClickListener() {

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -74,6 +75,8 @@ public class ExchangeFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         rcvExchange.setLayoutManager(linearLayoutManager);
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        rcvExchange.addItemDecoration(itemDecoration);
         rcvExchange.setAdapter(orderRVAdapter);
         rfExchange.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
