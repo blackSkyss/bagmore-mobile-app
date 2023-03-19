@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.bagmore.AuthScreen.LoginActivity;
-import com.example.bagmore.DeliveryActivity;
 import com.example.bagmore.HandlerException.Dialog;
 import com.example.bagmore.Helpers.TokenManager;
 import com.example.bagmore.Models.data.TokenRefreshViewModel;
@@ -212,9 +211,10 @@ public class CheckoutActivity extends AppCompatActivity {
                 public void onResponse(Call<JsonLogoutRes> call, Response<JsonLogoutRes> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(CheckoutActivity.this, "Checkout successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        setResult(Activity.RESULT_OK, intent);
                         finish();
-                        Intent intent = new Intent(CheckoutActivity.this, DeliveryActivity.class);
-                        startActivity(intent);
+
                     } else if (response.code() == 401) {
                         Toast.makeText(CheckoutActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();
                         refreshTokenAPI();

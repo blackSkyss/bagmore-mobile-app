@@ -114,7 +114,7 @@ public class CreateAddressActivity extends AppCompatActivity {
             public void onClick(View view) {
                 boolean check = validation();
                 if (check) {
-                    navigationResult();
+                    addShippingAPI();
                 }
                 return;
             }
@@ -168,7 +168,6 @@ public class CreateAddressActivity extends AppCompatActivity {
 
     //region navigation
     private void navigationResult() {
-        addShippingAPI();
         Intent intentResult = new Intent();
         setResult(Activity.RESULT_OK, intentResult);
         finish();

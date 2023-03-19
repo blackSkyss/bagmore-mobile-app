@@ -152,10 +152,9 @@ public class CartActivity extends AppCompatActivity {
                     return;
                 }
 
-
                 Intent i = new Intent(CartActivity.this, CheckoutActivity.class);
                 i.putExtra("total_price", totalPrice);
-                startActivity(i);
+                startActivityForResult(i, CODE);
             }
         });
     }
