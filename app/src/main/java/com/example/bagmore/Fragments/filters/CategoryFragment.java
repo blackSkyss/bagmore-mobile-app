@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.CategoryRVAdapter;
 import com.example.bagmore.Helpers.TokenManager;
+import com.example.bagmore.Interfaces.IClickItemCategoryFilter;
 import com.example.bagmore.Models.data.CategoryViewModel;
 import com.example.bagmore.Models.json.response.JsonCategory;
 import com.example.bagmore.R;
@@ -41,7 +42,14 @@ public class CategoryFragment extends Fragment {
 
     public CategoryFragment() {
         // Required empty public constructor
-        categoryAdapter = new CategoryRVAdapter(this.getContext());
+        categoryAdapter = new CategoryRVAdapter(this.getContext(), new IClickItemCategoryFilter() {
+            @Override
+            public void onClickHandler(CategoryViewModel model) {
+                if (getActivity() instanceof FilterActivity) {
+                    ((FilterActivity) getActivity()).setCategories(model.getId());
+                }
+            }
+        });
         // categoryAdapter.SetData(getCategories());
     }
 
@@ -74,7 +82,14 @@ public class CategoryFragment extends Fragment {
         categoryService = CategoryRepository.getCategoryService();
 
         rcvCategories = view.findViewById(R.id.rcvCategories);
-        categoryAdapter = new CategoryRVAdapter(view.getContext());
+        categoryAdapter = new CategoryRVAdapter(view.getContext(), new IClickItemCategoryFilter() {
+            @Override
+            public void onClickHandler(CategoryViewModel model) {
+                if (getActivity() instanceof FilterActivity) {
+                    ((FilterActivity) getActivity()).setCategories(model.getId());
+                }
+            }
+        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         rcvCategories.setLayoutManager(linearLayoutManager);

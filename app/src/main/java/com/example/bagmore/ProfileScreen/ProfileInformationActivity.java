@@ -174,7 +174,6 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 boolean check = validation();
                 if (check) {
                     UpdateUserAPI();
-                    disableUpdateMode();
                     /* Toast.makeText(ProfileInformationActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();*/
                 }
                 return;
@@ -330,6 +329,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonUpdateProfileRes> call, Response<JsonUpdateProfileRes> response) {
                 if (response.isSuccessful()) {
+                    disableUpdateMode();
                     Toast.makeText(ProfileInformationActivity.this, "update successfully", Toast.LENGTH_SHORT).show();
                 } else if (response.code() == 401) {
                     Toast.makeText(ProfileInformationActivity.this, "ReAuthentication", Toast.LENGTH_SHORT).show();

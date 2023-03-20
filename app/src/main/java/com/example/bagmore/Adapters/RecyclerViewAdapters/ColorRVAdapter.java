@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bagmore.Interfaces.IClickItemCategoryFilter;
+import com.example.bagmore.Interfaces.IClickItemColorFilter;
 import com.example.bagmore.Models.data.ColorViewModel;
 import com.example.bagmore.R;
 
@@ -20,8 +22,12 @@ public class ColorRVAdapter extends RecyclerView.Adapter<ColorRVAdapter.ColorVie
     private List<ColorViewModel> colors;
     private Context context;
 
-    public ColorRVAdapter(Context context) {
+    private static IClickItemColorFilter iClickItemColorFilter;
+
+
+    public ColorRVAdapter(Context context, IClickItemColorFilter iClickItemColorFilter) {
         this.context = context;
+        this.iClickItemColorFilter = iClickItemColorFilter;
     }
 
     public void setData(List<ColorViewModel> colors) {
@@ -70,6 +76,7 @@ public class ColorRVAdapter extends RecyclerView.Adapter<ColorRVAdapter.ColorVie
             textView.setText(color.getName());
             imgColor.setBackgroundColor(Color.parseColor(color.getCodeColor()));
             itemView.setOnClickListener(v -> {
+                iClickItemColorFilter.onClickHandler(color);
                 color.setChecked(!color.isChecked());
                 imageView.setVisibility(color.isChecked() ? View.VISIBLE : View.INVISIBLE);
             });

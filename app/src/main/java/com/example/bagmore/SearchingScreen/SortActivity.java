@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -79,11 +78,6 @@ public class SortActivity extends AppCompatActivity {
         tvSorting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (keySort == "" || keySort.equals("")) {
-                    Toast.makeText(SortActivity.this, "Please choose any option", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 Intent intent = new Intent();
                 intent.putExtra("key_sort", keySort);
                 setResult(Activity.RESULT_OK, intent);
@@ -99,13 +93,29 @@ public class SortActivity extends AppCompatActivity {
             @Override
             public void onClickHandler(SortingViewModel model) {
                 if (model.getId() == 1) {
-                    keySort = "NAMEASC";
+                    if (keySort.equals("")) {
+                        keySort = "NAMEASC";
+                    } else {
+                        keySort = "";
+                    }
                 } else if (model.getId() == 2) {
-                    keySort = "NAMEDESC";
+                    if (keySort.equals("")) {
+                        keySort = "NAMEDESC";
+                    } else {
+                        keySort = "";
+                    }
                 } else if (model.getId() == 3) {
-                    keySort = "PRICEASC";
+                    if(keySort.equals("")){
+                        keySort = "PRICEASC";
+                    }else{
+                        keySort = "";
+                    }
                 } else {
-                    keySort = "PRICEDESC";
+                    if(keySort.equals("")){
+                        keySort = "PRICEDESC";
+                    }else{
+                        keySort = "";
+                    }
                 }
             }
         });

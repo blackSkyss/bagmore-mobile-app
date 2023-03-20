@@ -1,5 +1,7 @@
 package com.example.bagmore.SearchingScreen;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.example.bagmore.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,10 +37,13 @@ public class FilterActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private ImageView imgClose;
     private TextView txtClearAll;
-    private TextView txtApplyFilter;
 
     @BindView(R.id.title_bottom_order)
     TextView tvFiltering;
+
+    private List<Integer> categoryList = new ArrayList<>();
+    private List<Integer> colorList = new ArrayList<>();
+    private List<Integer> sizeList = new ArrayList<>();
     //endregion
 
     @Override
@@ -75,10 +81,25 @@ public class FilterActivity extends AppCompatActivity {
         txtClearAll.setOnClickListener(v -> {
             sendSignalClearAll();
         });
-
-
-
     }
+
+    //region set category
+    public void setCategories(int categories) {
+        categoryList.add(categories);
+    }
+    //endregion
+
+    //region set color
+    public void setColors(int colors) {
+        colorList.add(colors);
+    }
+    //endregion
+
+    //region set size
+    public void setSizes(int sizes) {
+        sizeList.add(sizes);
+    }
+    //endregion
 
     //region config text bottom
     private void configTextBottom() {
@@ -92,12 +113,18 @@ public class FilterActivity extends AppCompatActivity {
         tvFiltering.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putIntegerArrayListExtra("category_list", (ArrayList<Integer>) categoryList);
+                intent.putIntegerArrayListExtra("color_list", (ArrayList<Integer>) colorList);
+                intent.putIntegerArrayListExtra("size_list", (ArrayList<Integer>) sizeList);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
     }
     //endregion
 
+    //region get filtered bag
     public String getFilteredBags() {
         //test
         String value = "";
@@ -131,6 +158,7 @@ public class FilterActivity extends AppCompatActivity {
         }
         return value;
     }
+    //endregion
 
     //region clear all handler
     private void sendSignalClearAll() {

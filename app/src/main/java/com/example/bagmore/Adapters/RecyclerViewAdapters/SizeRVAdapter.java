@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bagmore.Interfaces.IClickItemSizeFilter;
 import com.example.bagmore.Models.data.SizeViewModel;
 import com.example.bagmore.R;
 
@@ -20,8 +21,11 @@ public class SizeRVAdapter extends RecyclerView.Adapter<SizeRVAdapter.SizeViewHo
     private Context context;
     private List<SizeViewModel> sizes;
 
-    public SizeRVAdapter(Context context) {
+    private static IClickItemSizeFilter iClickItemSizeFilter;
+
+    public SizeRVAdapter(Context context, IClickItemSizeFilter iClickItemSizeFilter) {
         this.context = context;
+        this.iClickItemSizeFilter  = iClickItemSizeFilter;
     }
 
     public void setData(List<SizeViewModel> sizes) {
@@ -72,6 +76,7 @@ public class SizeRVAdapter extends RecyclerView.Adapter<SizeRVAdapter.SizeViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    iClickItemSizeFilter.onClickHandler(size);
                     size.setChecked(!size.isChecked());
                     imageView.setVisibility(size.isChecked() ? View.VISIBLE : View.INVISIBLE);
                 }

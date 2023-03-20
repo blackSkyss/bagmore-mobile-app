@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.SizeRVAdapter;
 import com.example.bagmore.Helpers.TokenManager;
+import com.example.bagmore.Interfaces.IClickItemSizeFilter;
 import com.example.bagmore.Models.data.SizeViewModel;
 import com.example.bagmore.Models.json.response.JsonSize;
 import com.example.bagmore.R;
@@ -70,8 +71,14 @@ public class SizeFragment extends Fragment {
         sizeService = SizeRepository.getSizeService();
 
         rcvSize = view.findViewById(R.id.rcvSizes);
-        sizeAdapter = new SizeRVAdapter(view.getContext());
-
+        sizeAdapter = new SizeRVAdapter(view.getContext(), new IClickItemSizeFilter() {
+            @Override
+            public void onClickHandler(SizeViewModel model) {
+                if (getActivity() instanceof FilterActivity) {
+                    ((FilterActivity) getActivity()).setSizes(model.getId());
+                }
+            }
+        });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         rcvSize.setLayoutManager(linearLayoutManager);
 

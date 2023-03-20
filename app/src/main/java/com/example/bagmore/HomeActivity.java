@@ -32,6 +32,7 @@ import com.example.bagmore.Services.ProductService;
 import com.example.bagmore.Services.UserService;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,9 +60,9 @@ public class HomeActivity extends AppCompatActivity {
     UserService userService;
 
     private String keySort;
-    private List<Integer> categories;
-    private List<Integer> colors;
-    private List<Integer> sizes;
+    private List<Integer> categories = new ArrayList<>();
+    private List<Integer> colors = new ArrayList<>();
+    private List<Integer> sizes = new ArrayList<>();
     //endregion
 
     @Override
@@ -299,10 +300,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_SORT && resultCode == Activity.RESULT_OK) {
-            keySort =  data.getStringExtra("key_sort");
+            keySort = data.getStringExtra("key_sort");
             onRefreshHandler();
         } else if (requestCode == CODE_FILTER && resultCode == Activity.RESULT_OK) {
-
+            categories = (List<Integer>) data.getIntegerArrayListExtra("category_list");
+            colors = (List<Integer>) data.getIntegerArrayListExtra("color_list");
+            sizes = (List<Integer>) data.getIntegerArrayListExtra("size_list");
+            onRefreshHandler();
         }
     }
 }

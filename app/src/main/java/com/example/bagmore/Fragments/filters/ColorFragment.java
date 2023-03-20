@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.ColorRVAdapter;
 import com.example.bagmore.Helpers.TokenManager;
+import com.example.bagmore.Interfaces.IClickItemColorFilter;
 import com.example.bagmore.Models.data.ColorViewModel;
 import com.example.bagmore.Models.json.response.JsonColor;
 import com.example.bagmore.R;
@@ -71,7 +72,14 @@ public class ColorFragment extends Fragment {
         colorService = ColorRepository.getColorService();
 
         rcvColors = view.findViewById(R.id.rcvColors);
-        colorAdapter = new ColorRVAdapter(view.getContext());
+        colorAdapter = new ColorRVAdapter(view.getContext(), new IClickItemColorFilter() {
+            @Override
+            public void onClickHandler(ColorViewModel model) {
+                if (getActivity() instanceof FilterActivity) {
+                    ((FilterActivity) getActivity()).setColors(model.getId());
+                }
+            }
+        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         rcvColors.setLayoutManager(linearLayoutManager);

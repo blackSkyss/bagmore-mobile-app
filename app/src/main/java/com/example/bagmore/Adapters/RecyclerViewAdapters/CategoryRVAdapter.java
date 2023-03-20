@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bagmore.Interfaces.IClickItemCategoryFilter;
 import com.example.bagmore.Models.data.CategoryViewModel;
 import com.example.bagmore.R;
 
@@ -20,8 +21,11 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
     private Context context;
     private List<CategoryViewModel> categories;
 
-    public CategoryRVAdapter(Context context) {
+    private static IClickItemCategoryFilter iClickItemCategoryFilter;
+
+    public CategoryRVAdapter(Context context, IClickItemCategoryFilter iClickItemCategoryFilter) {
         this.context = context;
+        this.iClickItemCategoryFilter = iClickItemCategoryFilter;
     }
 
     public void SetData(List<CategoryViewModel> categories) {
@@ -73,6 +77,7 @@ public class CategoryRVAdapter extends RecyclerView.Adapter<CategoryRVAdapter.Ca
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    iClickItemCategoryFilter.onClickHandler(category);
                     category.setChecked(!category.isChecked());
                     imageView.setVisibility(category.isChecked() ? View.VISIBLE : View.INVISIBLE);
                 }
