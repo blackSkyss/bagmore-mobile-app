@@ -1,11 +1,13 @@
 package com.example.bagmore;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,11 +27,12 @@ import com.example.bagmore.ProfileScreen.ProfileOverallActivity;
 import com.example.bagmore.Repository.ProductRepository;
 import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.SearchingScreen.FilterActivity;
-import com.example.bagmore.SearchingScreen.SearchActivity;
 import com.example.bagmore.SearchingScreen.SortActivity;
 import com.example.bagmore.Services.ProductService;
 import com.example.bagmore.Services.UserService;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +44,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
     //region init UI component
+    private static int CODE_SORT = 10;
+
+    private static int CODE_FILTER = 20;
     ProductService productService;
     RecyclerView.LayoutManager layoutManager;
     ProductHomeRVAdapter recyclerViewHomeAdapter;
@@ -51,6 +57,11 @@ public class HomeActivity extends AppCompatActivity {
     SwipeRefreshLayout rfProduct;
     String email;
     UserService userService;
+
+    private String keySort;
+    private List<Integer> categories;
+    private List<Integer> colors;
+    private List<Integer> sizes;
     //endregion
 
     @Override
@@ -81,7 +92,7 @@ public class HomeActivity extends AppCompatActivity {
         try {
             TokenManager tokenManager = new TokenManager(getApplicationContext());
             String token = tokenManager.getAccessToken();
-            Call<JsonProductViewModel> callGetProducts = productService.getProducts("bearer " + token);
+            Call<JsonProductViewModel> callGetProducts = productService.getProducts("bearer " + token, keySort, categories, colors, sizes);
             callGetProducts.enqueue(new Callback<JsonProductViewModel>() {
                 @Override
                 public void onResponse(Call<JsonProductViewModel> call, Response<JsonProductViewModel> response) {
@@ -164,8 +175,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-               // Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-               // startActivity(intent);
             }
         });
 
@@ -173,9 +182,8 @@ public class HomeActivity extends AppCompatActivity {
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-              // Intent intent = new Intent(HomeActivity.this, SortActivity.class);
-              //  startActivity(intent);
+                Intent iSort = new Intent(HomeActivity.this, SortActivity.class);
+                startActivityForResult(iSort, CODE_SORT);
             }
         });
 
@@ -183,9 +191,8 @@ public class HomeActivity extends AppCompatActivity {
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-               // Intent intent = new Intent(HomeActivity.this, FilterActivity.class);
-               // startActivity(intent);
+                Intent iFilter = new Intent(HomeActivity.this, FilterActivity.class);
+                startActivityForResult(iFilter, CODE_FILTER);
             }
         });
 
@@ -286,4 +293,16 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
     //endregion
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_SORT && resultCode == Activity.RESULT_OK) {
+            keySort =  data.getStringExtra("key_sort");
+            onRefreshHandler();
+        } else if (requestCode == CODE_FILTER && resultCode == Activity.RESULT_OK) {
+
+        }
+    }
 }

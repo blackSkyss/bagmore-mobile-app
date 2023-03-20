@@ -1,11 +1,14 @@
 package com.example.bagmore.SearchingScreen;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bagmore.Adapters.RecyclerViewAdapters.SortingRVAdapter;
+import com.example.bagmore.Interfaces.IClickItemSort;
 import com.example.bagmore.Models.data.SortingViewModel;
 import com.example.bagmore.R;
 
@@ -31,6 +35,8 @@ public class SortActivity extends AppCompatActivity {
     private TextView appliedSorting;
     @BindView(R.id.title_bottom_order)
     TextView tvSorting;
+
+    private String keySort = "";
     //endregion
 
     @Override
@@ -69,11 +75,18 @@ public class SortActivity extends AppCompatActivity {
     //endregion
 
     //region handler sorting bottom
-    //Click Sorting button => get value sort => execute sort => return value => back to home with return value
     private void onClickSorting() {
         tvSorting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (keySort == "" || keySort.equals("")) {
+                    Toast.makeText(SortActivity.this, "Please choose any option", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent();
+                intent.putExtra("key_sort", keySort);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
@@ -82,7 +95,20 @@ public class SortActivity extends AppCompatActivity {
 
     private void setLayout() {
         rcvSorting = findViewById(R.id.rcvSortBag);
-        sortingAdapter = new SortingRVAdapter(this);
+        sortingAdapter = new SortingRVAdapter(this, new IClickItemSort() {
+            @Override
+            public void onClickHandler(SortingViewModel model) {
+                if (model.getId() == 1) {
+                    keySort = "NAMEASC";
+                } else if (model.getId() == 2) {
+                    keySort = "NAMEDESC";
+                } else if (model.getId() == 3) {
+                    keySort = "PRICEASC";
+                } else {
+                    keySort = "PRICEDESC";
+                }
+            }
+        });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvSorting.setLayoutManager(linearLayoutManager);
@@ -93,10 +119,10 @@ public class SortActivity extends AppCompatActivity {
 
     private List<SortingViewModel> getSortings() {
         List<SortingViewModel> sortingList = new ArrayList<>();
-        sortingList.add(new SortingViewModel("Name growing"));
-        sortingList.add(new SortingViewModel("Name decreasing"));
-        sortingList.add(new SortingViewModel("Price growing"));
-        sortingList.add(new SortingViewModel("Price decreasing"));
+        sortingList.add(new SortingViewModel(1, "Name growing"));
+        sortingList.add(new SortingViewModel(2, "Name decreasing"));
+        sortingList.add(new SortingViewModel(3, "Price growing"));
+        sortingList.add(new SortingViewModel(4, "Price decreasing"));
 
         return sortingList;
     }

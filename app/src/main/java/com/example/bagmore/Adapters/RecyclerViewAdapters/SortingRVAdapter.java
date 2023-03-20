@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bagmore.Interfaces.IClickItemSort;
 import com.example.bagmore.Models.data.SortingViewModel;
 import com.example.bagmore.R;
 
@@ -19,10 +20,13 @@ public class SortingRVAdapter extends RecyclerView.Adapter<SortingRVAdapter.Sort
 
     private Context context;
     private List<SortingViewModel> sortingList;
+
+    private IClickItemSort iClickItemSort;
     private int checkedPosition = 0;
 
-    public SortingRVAdapter(Context context) {
+    public SortingRVAdapter(Context context, IClickItemSort iClickItemSort) {
         this.context = context;
+        this.iClickItemSort = iClickItemSort;
     }
 
     public void setData(List<SortingViewModel> sortingList) {
@@ -58,10 +62,13 @@ public class SortingRVAdapter extends RecyclerView.Adapter<SortingRVAdapter.Sort
         private TextView textView;
         private ImageView imageView;
 
+        private View rlItemSort;
+
         public SortingViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.txtSortName);
             imageView = itemView.findViewById(R.id.imgCheckSorting);
+            rlItemSort = itemView.findViewById(R.id.rl_item_sort);
         }
 
         public void bindImageView(SortingViewModel nextSorting) {
@@ -81,6 +88,7 @@ public class SortingRVAdapter extends RecyclerView.Adapter<SortingRVAdapter.Sort
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    iClickItemSort.onClickHandler(nextSorting);
                     nextSorting.setChecked(!nextSorting.isChecked());
                     imageView.setVisibility(nextSorting.isChecked() ? View.VISIBLE : View.INVISIBLE);
                     if (checkedPosition != getAdapterPosition()) {
