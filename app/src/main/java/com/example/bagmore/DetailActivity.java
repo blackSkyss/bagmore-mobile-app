@@ -1,8 +1,11 @@
 package com.example.bagmore;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
@@ -43,6 +46,7 @@ import retrofit2.Response;
 public class DetailActivity extends AppCompatActivity {
 
     //region init
+    private static final String CHANNEL_ID = "HAHA";
     private TabLayout mtabLayout;
     private ViewPager mViewPager;
     private ProductHomeTVAdapter mViewPagerAdapter;
@@ -73,6 +77,19 @@ public class DetailActivity extends AppCompatActivity {
 
         getProductDetailById();
         OnClickHandler();
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name = "cart";
+            String description = "add to cart";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 

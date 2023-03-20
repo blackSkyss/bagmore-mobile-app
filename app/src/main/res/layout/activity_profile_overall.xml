@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ln_img_profile"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/bd_bt_item_checkout"
         android:gravity="center"
         android:padding="15dp">
@@ -124,10 +124,41 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ln_logout"
+        android:id="@+id/ln_shop_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ln_orders"
+        android:background="@drawable/bd_bt_item_checkout"
+        android:gravity="center"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/dmsans_regular"
+            android:text="Shop address"
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_shop_address"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:backgroundTint="@color/main_color"
+            app:icon="@drawable/ic_forward_32"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ln_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ln_shop_address"
         android:background="@drawable/bd_bt_item_checkout"
         android:gravity="center"
         android:padding="15dp">

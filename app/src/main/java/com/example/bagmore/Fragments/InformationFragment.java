@@ -1,5 +1,7 @@
 package com.example.bagmore.Fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.bagmore.DetailActivity;
@@ -37,6 +42,7 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +53,6 @@ import retrofit2.Response;
 
 
 public class InformationFragment extends Fragment {
-
 
     //region init UI component
     AppCompatRadioButton rbS, rbM, rbL, rbXL, rbXXL, rbw, rbb, rbr, rbp, rbbr;
@@ -369,9 +374,7 @@ public class InformationFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (edtQuantity.getText().toString() == null
-                        || edtQuantity.getText().toString().isEmpty()
-                        || Integer.valueOf(edtQuantity.getText().toString()) == 0) {
+                if (edtQuantity.getText().toString() == null || edtQuantity.getText().toString().isEmpty() || Integer.valueOf(edtQuantity.getText().toString()) == 0) {
                     quantity = 1;
                     btnMinus.setEnabled(false);
                     edtQuantity.setText(String.valueOf(quantity));
@@ -454,6 +457,28 @@ public class InformationFragment extends Fragment {
     }
     //endregion
 
+    //region notification
+    private void pushNotification(String title) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "HAHA")
+                .setSmallIcon(R.drawable.ic_success_32px)
+                .setContentTitle("Add to cart")
+                .setContentText("Product: " + title + " has been added to the cart")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        notificationManager.notify(getNotificationId(), builder.build());
+    }
+
+
+    private int getNotificationId() {
+        return (int) new Date().getTime();
+    }
+    //endregion
+
     //region call add to cart API
     private void addToCartAPI() {
         if (acceptAddToCart == false) {
@@ -471,6 +496,7 @@ public class InformationFragment extends Fragment {
                     public void onResponse(Call<JsonLogoutRes> call, Response<JsonLogoutRes> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(getContext(), "Add successfully", Toast.LENGTH_SHORT).show();
+                            pushNotification(product.getName());
                         } else if (response.code() == 401) {
                             Toast.makeText(getContext(), "ReAuthentication", Toast.LENGTH_SHORT).show();
                             refreshTokenAPI();

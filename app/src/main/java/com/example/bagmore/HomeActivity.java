@@ -52,7 +52,6 @@ public class HomeActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     ProductHomeRVAdapter recyclerViewHomeAdapter;
     private RecyclerView recyclerView;
-    private ImageButton btnSearch;
     private MaterialButton btnSort, btnFilter, btnHome, btnNotification, btnDiscovery, btnShop, btnAccount;
     @BindView(R.id.swipe_rf_product)
     SwipeRefreshLayout rfProduct;
@@ -149,7 +148,6 @@ public class HomeActivity extends AppCompatActivity {
     //region init UI
     private void initUI() {
         recyclerView = findViewById(R.id.rcv);
-        btnSearch = findViewById(R.id.btn_search);
         btnSort = findViewById(R.id.btn_sort);
         btnFilter = findViewById(R.id.btn_filter);
         btnHome = findViewById(R.id.btn_home);
@@ -168,14 +166,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 onRefreshHandler();
-            }
-        });
-
-        // go to search screen
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
             }
         });
 

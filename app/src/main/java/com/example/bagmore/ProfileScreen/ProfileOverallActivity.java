@@ -23,6 +23,7 @@ import com.example.bagmore.OrderScreen.CartActivity;
 import com.example.bagmore.R;
 import com.example.bagmore.Repository.UserRepository;
 import com.example.bagmore.Services.UserService;
+import com.example.bagmore.ShopAddressActivity;
 import com.google.android.material.button.MaterialButton;
 
 import butterknife.BindView;
@@ -39,6 +40,9 @@ public class ProfileOverallActivity extends AppCompatActivity {
 
     @BindView(R.id.ln_orders)
     View lnOrders;
+
+    @BindView(R.id.ln_shop_address)
+    View lnShopAddress;
 
     @BindView(R.id.ln_logout)
     View lnLogout;
@@ -123,6 +127,14 @@ public class ProfileOverallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileOverallActivity.this, DeliveryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        lnShopAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileOverallActivity.this, ShopAddressActivity.class);
                 startActivity(intent);
             }
         });
