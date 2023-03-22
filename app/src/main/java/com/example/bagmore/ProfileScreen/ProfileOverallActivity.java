@@ -50,7 +50,7 @@ public class ProfileOverallActivity extends AppCompatActivity {
     @BindView(R.id.btn_home)
     MaterialButton btnHome;
 
-    @BindView(R.id.btn_notification)
+    @BindView(R.id.btn_map)
     MaterialButton btnNotification;
 
     @BindView(R.id.btn_discovery)

@@ -73,11 +73,12 @@
                 android:textSize="17dp" />
 
             <EditText
+
                 android:id="@+id/edt_password_login"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/under_line_edit_text"
-                android:inputType="textEmailAddress"
+                android:inputType="textPassword"
                 android:textColor="@color/grey"
                 android:textColorHint="@color/grey" />
 

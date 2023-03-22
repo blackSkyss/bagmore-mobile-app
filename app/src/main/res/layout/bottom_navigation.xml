@@ -27,12 +27,12 @@
             app:rippleColor="@color/white" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_notification"
+            android:id="@+id/btn_map"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             app:backgroundTint="#000000"
-            app:icon="@drawable/ic_notifications_35"
+            app:icon="@drawable/ic_map_35"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
             app:iconTint="@color/white"

@@ -18,6 +18,15 @@
         android:theme="@style/Theme.BagMore"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC9yBEGhLmeNXwhj0cE9KigY4rYtehmmGc">
+
+        </meta-data>
+
+        <activity
+            android:name=".MapActivity"
+            android:exported="false" />
         <activity
             android:name=".ShopAddressActivity"
             android:exported="false" />

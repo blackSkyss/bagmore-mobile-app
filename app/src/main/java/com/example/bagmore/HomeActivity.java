@@ -52,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     ProductHomeRVAdapter recyclerViewHomeAdapter;
     private RecyclerView recyclerView;
-    private MaterialButton btnSort, btnFilter, btnHome, btnNotification, btnDiscovery, btnShop, btnAccount;
+    private MaterialButton btnSort, btnFilter, btnHome, btnMap, btnDiscovery, btnShop, btnAccount;
     @BindView(R.id.swipe_rf_product)
     SwipeRefreshLayout rfProduct;
     String email;
@@ -151,7 +151,7 @@ public class HomeActivity extends AppCompatActivity {
         btnSort = findViewById(R.id.btn_sort);
         btnFilter = findViewById(R.id.btn_filter);
         btnHome = findViewById(R.id.btn_home);
-        btnNotification = findViewById(R.id.btn_notification);
+        btnMap = findViewById(R.id.btn_map);
         btnDiscovery = findViewById(R.id.btn_discovery);
         btnShop = findViewById(R.id.btn_shop);
         btnAccount = findViewById(R.id.btn_account);
@@ -199,10 +199,11 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // go to notification screen
-        btnNotification.setOnClickListener(new View.OnClickListener() {
+        btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(HomeActivity.this, MapActivity.class);
+                startActivity(intent);
             }
         });
 
