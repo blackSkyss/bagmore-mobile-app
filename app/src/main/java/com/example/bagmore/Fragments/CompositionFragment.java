@@ -47,6 +47,6 @@ public class CompositionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvComposition = view.findViewById(R.id.tv_composition_product);
-        tvComposition.setText(product.getComposition());
+        tvComposition.setText(android.text.Html.fromHtml(product.getComposition()));
     }
 }

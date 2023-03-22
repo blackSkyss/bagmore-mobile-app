@@ -131,7 +131,7 @@ public class InformationFragment extends Fragment {
         edtQuantity = view.findViewById(R.id.edt_quantity);
 
         tvName.setText(product.getName());
-        tvDescription.setText(product.getDescription());
+        tvDescription.setText(android.text.Html.fromHtml(product.getDescription()));
         //endregion
 
         //region handler size

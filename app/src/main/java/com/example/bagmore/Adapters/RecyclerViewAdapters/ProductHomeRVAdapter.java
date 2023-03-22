@@ -64,7 +64,7 @@ public class ProductHomeRVAdapter extends RecyclerView.Adapter<ProductHomeRVAdap
 
         String price = "$" + product.getMinPrice() + " - " + "$" + product.getMaxPrice();
         holder.title.setText(price);
-        holder.description.setText(product.getDescription());
+        holder.description.setText(android.text.Html.fromHtml(product.getDescription()));
 
         // handler click on image
         holder.image.setOnClickListener(new View.OnClickListener() {
