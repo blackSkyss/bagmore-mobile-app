@@ -19,8 +19,6 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        Button btn_google = findViewById(R.id.btn_google);
-        Button btn_facebook = findViewById(R.id.btn_facebook);
         Button btn_sign_up_email = findViewById(R.id.btn_sign_up_email);
         Button btn_sign_in_email = findViewById(R.id.btn_sign_in_email);
 
@@ -28,18 +26,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         //region handler button
-        btn_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(WelcomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-            }
-        });
-        btn_facebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(WelcomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-            }
-        });
         btn_sign_up_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -181,7 +181,6 @@ public class CheckoutActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_DELIVERY && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "Choose delivery successfully", Toast.LENGTH_SHORT).show();
             idDelivery = data.getIntExtra("id_delivery", 0);
 
             total -= price;
@@ -192,7 +191,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
             configBottomNavigation();
         } else if (requestCode == CODE_SHIPPING && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "Choose shipping successfully", Toast.LENGTH_SHORT).show();
             idShipping = data.getIntExtra("id_shipping", 0);
             tv_shipping.setText("\u25CF Shipping: " + data.getStringExtra("name_shipping"));
         } else {

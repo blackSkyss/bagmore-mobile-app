@@ -149,7 +149,7 @@
                     android:layout_height="65dp"
                     android:background="@drawable/under_line_edit_text"
                     android:clickable="false"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:textColor="@color/black" />
 
                 <TextView
@@ -166,7 +166,7 @@
                     android:layout_height="65dp"
                     android:background="@drawable/under_line_edit_text"
                     android:clickable="false"
-                    android:inputType="text"
+                    android:inputType="textPassword"
                     android:textColor="@color/black" />
 
                 <TextView

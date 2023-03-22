@@ -48,31 +48,7 @@
         android:layout_below="@+id/ln_txt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btn_google"
-            android:layout_width="370dp"
-            android:layout_height="70dp"
-            android:backgroundTint="@color/grey1"
-            android:drawableLeft="@drawable/google"
-            android:text="Continue with Google"
-            android:textAllCaps="false"
-            android:textColor="@color/black" />
-
-        <Button
-            android:id="@+id/btn_facebook"
-            android:layout_width="370dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="@color/grey1"
-            android:drawableLeft="@drawable/facebook_image"
-            android:text="Continue with Facebook"
-            android:textAllCaps="false"
-            android:textColor="@color/black" />
-
-
-    </LinearLayout>
+        android:orientation="vertical"/>
 
     <LinearLayout
         android:id="@+id/line"
@@ -81,30 +57,7 @@
         android:layout_below="@id/ln_btn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="170dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/line" />
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OR"
-            android:textColor="@color/grey" />
-
-        <View
-            android:layout_width="170dp"
-            android:layout_height="1dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/line" />
-
-    </LinearLayout>
+        android:orientation="horizontal"/>
 
     <Button
         android:id="@+id/btn_sign_up_email"

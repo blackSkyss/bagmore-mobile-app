@@ -87,7 +87,6 @@ public class DeliveryMethodActivity extends AppCompatActivity {
                 priceDelivery = viewModel.getPrice();
                 idDelivery = viewModel.getId();
                 nameDelivery = viewModel.getName();
-                Toast.makeText(DeliveryMethodActivity.this, viewModel.getName() + "Selected", Toast.LENGTH_SHORT).show();
             }
         });
         deliveryMethodRVAdapter.setData(deliveries);

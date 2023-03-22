@@ -89,7 +89,6 @@ public class ShippingAddressActivity extends AppCompatActivity {
             public void onClickItemShipping(ShippingAddressViewModel viewModel) {
                 idShipping = viewModel.getId();
                 nameShipping = viewModel.getAddress();
-                Toast.makeText(ShippingAddressActivity.this, viewModel.getAddress() + " Selected", Toast.LENGTH_SHORT).show();
             }
         });
         shippingAddressRVAdapter.setData(shippings);
