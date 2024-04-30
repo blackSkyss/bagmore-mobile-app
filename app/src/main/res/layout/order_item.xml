@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ln_order_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_delivery_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delivery status"
+        android:textColor="@color/black"
+        android:textSize="20dp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_order_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Order date"
+        android:textColor="@color/black"
+        android:textSize="20dp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_ship_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Shipping address"
+        android:textColor="@color/black"
+        android:textSize="20dp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_delivery_mt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Delivery method"
+        android:textColor="@color/black"
+        android:textSize="20dp">
+
+    </TextView>
+
+</LinearLayout>

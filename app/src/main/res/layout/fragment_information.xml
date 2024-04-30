@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="20dp"
+    android:background="@color/bg_fragment"
+    tools:context=".Fragments.InformationFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nt_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_title_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/prata_regular"
+                android:text="Shoulder Bag"
+                android:textColor="@color/black"
+                android:textSize="30dp">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/dmsans_regular"
+                android:text="\u25CF Description"
+                android:textColor="@color/grey"
+                android:textSize="20dp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_description_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dmsans_regular"
+                android:padding="18dp"
+                android:text="Ently clean with a clean, dry cloth. You can also use a soft brush. Do not apply cream. Treat with special sprays."
+                android:textColor="@color/grey"
+                android:textSize="18dp">
+
+            </TextView>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nexa_text_trial_bold"
+                android:text="Size Selection"
+                android:textColor="@color/black"
+                android:textSize="20dp">
+
+            </TextView>
+
+
+            <RadioGroup
+                android:id="@+id/rg_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_S"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_size_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="S"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_M"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_size_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="M"
+
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_L"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_size_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="L"
+
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_XL"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_size_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="XL"
+
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_XXL"
+                    android:layout_width="40dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_size_selector"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="XXL"
+
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+
+            </RadioGroup>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nexa_text_trial_bold"
+                android:text="Color Selection"
+                android:textColor="@color/black"
+                android:textSize="20dp">
+
+            </TextView>
+
+            <RadioGroup
+                android:id="@+id/rg_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_w"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/radio_color_white"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="V"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_b"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/radio_color_black"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="V"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_r"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/radio_color_red"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="V"
+                    android:textColor="@color/red"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_p"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/radio_color_pink"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="V"
+                    android:textColor="@color/pink"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_br"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/radio_color_brown"
+                    android:button="@android:color/transparent"
+                    android:checked="false"
+                    android:fontFamily="@font/nexa_text_trial_bold"
+                    android:gravity="center"
+                    android:text="V"
+                    android:textColor="@color/brown"
+                    android:textSize="20dp" />
+
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nexa_text_trial_bold"
+                android:text="Quantity Selection"
+                android:textColor="@color/black"
+                android:textSize="20dp">
+
+            </TextView>
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="80dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_minus"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:backgroundTint="@color/black"
+                    app:icon="@drawable/minus"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
+
+                <EditText
+
+                    android:id="@+id/edt_quantity"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/bg_white_border_grey"
+                    android:digits="0123456789"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:text="1"
+                    android:textColor="@color/black"
+                    android:textSize="22dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_plus"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:backgroundTint="@color/black"
+                    app:icon="@drawable/plus"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        layout="@layout/bottom_navigation_order">
+    </include>
+
+</RelativeLayout>

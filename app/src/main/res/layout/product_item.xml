@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="16dp"
+    android:background="@color/main_color"
+    android:orientation="vertical"
+    >
+
+
+    <ImageView
+        android:id="@+id/image__view"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:src="@drawable/img1" />
+
+    <LinearLayout
+        android:id="@+id/ln_lo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/dmsans_regular"
+            android:gravity="start"
+            android:paddingLeft="5dp"
+            android:text="$230 - $250"
+            android:textColor="@color/black"
+            android:textSize="18dp">
+        </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_favorite"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:background="@drawable/shape_icon"
+            app:backgroundTint="@color/main_color"
+            app:icon="@drawable/ic_favorite_border_30"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/black"
+            app:rippleColor="@color/white" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_desciption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ln_lo"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="5dp"
+        android:text="Wrist watch in gold color metallic"
+        android:textSize="15dp"
+        android:fontFamily="@font/dmsans_regular">
+
+
+    </TextView>
+
+</LinearLayout>

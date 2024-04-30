@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.BagMore"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC9yBEGhLmeNXwhj0cE9KigY4rYtehmmGc">
+
+        </meta-data>
+
+        <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ShopAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderScreen.OrderDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileScreen.ProfileInformationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileScreen.ProfileOverallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchingScreen.SortActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchingScreen.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchingScreen.FilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderScreen.CreateAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderScreen.ShippingAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderScreen.DeliveryMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DeliveryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderScreen.CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderScreen.CartActivity"
+            android:exported="false">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".AuthScreen.SignupActivity"
+            android:exported="false">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".AuthScreen.WelcomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AuthScreen.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+    </application>
+
+</manifest>

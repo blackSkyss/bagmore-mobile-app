@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_cart_item"
+    android:padding="10dp">
+
+
+    <ImageView
+        android:id="@+id/iv_cart_item"
+        android:layout_width="130dp"
+        android:layout_height="180dp"
+        android:layout_weight="1"
+        android:src="@drawable/img3" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="180dp"
+        android:layout_weight="112"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_title_cart_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Panic Beg X 1"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_item"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="16dp"
+                app:backgroundTint="@color/main_color"
+                app:icon="@drawable/close_32px"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@color/black"
+                app:rippleColor="@color/white" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_size_cart_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/nexa_text_trial_bold"
+            android:text="Size: L"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_color_cart_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/nexa_text_trial_bold"
+            android:text="Color: Brown"
+            android:textSize="18dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tv_price_cart_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/dmsans_regular"
+                android:text="$230"
+                android:textColor="@color/black"
+                android:textSize="25dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_move"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nexa_text_trial_bold"
+                android:text="Move Wishlist"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                app:cornerRadius="0dp"
+                app:rippleColor="@color/main_color"
+                app:strokeColor="@color/black" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
